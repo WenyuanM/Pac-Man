@@ -6,7 +6,6 @@ import java.util.ArrayList;
 public class Map {
     private SideBar _sidebar;
     private Grid[][] _map;
-    private ArrayList<Food> _foodList;
     private int _mapRow;
     private int _mapCol;
     private int _mapSize;
