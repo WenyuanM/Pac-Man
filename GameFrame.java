@@ -22,8 +22,7 @@ public class GameFrame implements MouseMotionListener,KeyListener{
         _gamePoint = 0;
         _map = map;
         _pacMan = new Character(generatePacManStartPos(),new Coordinate(0,0),Constants.GRID_ROW,Constants.GRID_COL,'P');
-        _offImg = new BufferedImage(Constants.GAMEFRAME_FRAME_WIDTH,
-                (Constants.GAMEFRAME_FRAME_HEIGHT - Constants.SIDEBAR_HEIGHT),BufferedImage.TYPE_INT_RGB);
+        _offImg = new BufferedImage(Constants.GAMEFRAME_FRAME_WIDTH, Constants.GAMEFRAME_FRAME_HEIGHT,BufferedImage.TYPE_INT_RGB);
         drawOffImg();
         _mapComponent = new MapComponent();
         createInsidePanel();
@@ -52,7 +51,6 @@ public class GameFrame implements MouseMotionListener,KeyListener{
         Coordinate size = grid.get_size();
         size = size.divide(2);
         Coordinate position = pos.add(size);
-        position = position.add(new Coordinate(0,Constants.SIDEBAR_HEIGHT));
         return position;
     }
 
@@ -114,7 +112,7 @@ public class GameFrame implements MouseMotionListener,KeyListener{
         int code = e.getKeyCode();
         System.out.println("Key: " + code);
         _pacMan.update(code);
-        System.out.println(_pacMan.get_position().add(new Coordinate(0,Constants.SIDEBAR_HEIGHT)));
+        System.out.println(_pacMan.get_position());
         int index = _map.findGridIndex(_pacMan.get_position(),_pacMan.get_row(),_pacMan.get_col());
         _pacMan.set_row(index / _map.get_mapCol());
         _pacMan.set_col(index % _map.get_mapCol());
@@ -130,7 +128,7 @@ public class GameFrame implements MouseMotionListener,KeyListener{
 
     private class MapComponent extends JComponent{
         public void paintComponent(Graphics shape){
-            shape.drawImage(_offImg,0,Constants.SIDEBAR_HEIGHT,null);
+            shape.drawImage(_offImg,0,0,null);
             drawCharacters(shape);
             drawFood(shape);
         }
@@ -163,7 +161,7 @@ public class GameFrame implements MouseMotionListener,KeyListener{
             shape.setColor(Color.YELLOW);
             if(type.equals(".")){
                 int x = (int)(leftTop.getX() + size.getX() / 2);
-                int y = (int)(leftTop.getY() + Constants.SIDEBAR_HEIGHT + size.getY() / 2);
+                int y = (int)(leftTop.getY() + size.getY() / 2);
                 shape.fillOval(x,y,Constants.SMALL_FOOD_SIZE,Constants.SMALL_FOOD_SIZE);
             }
         }
