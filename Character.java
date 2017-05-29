@@ -41,12 +41,39 @@ public class Character {
         _col = col;
     }
 
-    public boolean update(int code){
+    public Coordinate ifUpdate(int code){
         if(updateMovingDirection(code) && updateSpeed()){
-            _position = _position.add(_speed);
-            return true;
+            return _position.add(_speed);
         }
-        return false;
+        return _position;
+    }
+
+    public Coordinate adjustPos(Coordinate newCharacterPos,Coordinate mapCenterPos){
+        if(_movingDirection == 'L' || _movingDirection == 'R' || _movingDirection == '-'){
+            newCharacterPos.setY(mapCenterPos.getY());
+        }
+        if(_movingDirection == 'U' || _movingDirection == 'D' || _movingDirection == '-'){
+            newCharacterPos.setX(mapCenterPos.getX());
+        }
+        return newCharacterPos;
+    }
+
+    public void update(Coordinate newPosition,int row,int col){
+        _position = newPosition;
+        _row = row;
+        _col = col;
+    }
+
+    public void updateTransition(int col,int maxCol){
+        System.out.println("In the updateTransition method!!!!!!!!!!!!!!!!!!!1");
+        if(col == Constants.TRANSITION_LEFT_COL){
+            _position.setX(Constants.GAMEFRAME_FRAME_WIDTH - Constants.CHARACTER_IMAGE_SIZE / 2);
+            _col = maxCol - 1;
+        }
+        else{
+            _position.setX(Constants.CHARACTER_IMAGE_SIZE / 2);
+            _col = 0;
+        }
     }
 
     public BufferedImage get_images(){
@@ -72,6 +99,8 @@ public class Character {
     public void set_col(int col){
         _col = col;
     }
+
+    public char get_movingDirection() {return _movingDirection;}
 
     public void printCharacterInfo(){
         System.out.println("Type: " +_type);
