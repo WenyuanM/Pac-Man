@@ -41,8 +41,40 @@ public final class Constants{
     // ===================== IMAGE NAME ===========================
     public static final String LOG_IN_WINDOW_BACKGROUND = "Image File\\Log In Window Background.jpg";
     public static final String SIGN_UP_WINDOW_BACKGROUND = "Image File\\Sign Up Window Background.jpg";
-    public static final String PAC_MAN_FACING_RIGHT = "Image File\\pac man.jpg";
 
+    public static final String PAC_MAN_FACING_LEFT = "Image File\\Pac Man_Left.jpg";
+    public static final String PAC_MAN_FACING_RIGHT = "Image File\\Pac Man_Right.png";
+    public static final String PAC_MAN_FACING_UP = "Image File\\Pac Man_Up.jpg";
+    public static final String PAC_MAN_FACING_DOWN = "Image File\\Pac Man_Down.jpg";
+
+    public static final String RED_GHOST_LEFT_1 = "Image File\\Red_Left1.jpg";
+    public static final String RED_GHOST_LEFT_2 = "Image File\\Red_Left2.jpg";
+    public static final String RED_GHOST_DOWN_1 = "Image File\\Red_Down1.jpg";
+    public static final String RED_GHOST_DOWN_2 = "Image File\\Red_Down2.jpg";
+    public static final String RED_GHOST_RIGHT = "Image File\\Red_Right.jpg";
+
+    public static final String PINK_GHOST_LEFT_1 = "Image File\\Pink_Left1.jpg";
+    public static final String PINK_GHOST_LEFT_2 = "Image File\\Pink_Left2.jpg";
+    public static final String PINK_GHOST_DOWN_1 = "Image File\\Pink_Down1.jpg";
+    public static final String PINK_GHOST_DOWN_2 = "Image File\\Pink_Down2.jpg";
+    public static final String PINK_GHOST_RIGHT = "Image File\\Pink_Right.jpg";
+
+    public static final String BLUE_GHOST_LEFT_1 = "Image File\\Blue_Left1.jpg";
+    public static final String BLUE_GHOST_LEFT_2 = "Image File\\Blue_Left2.jpg";
+    public static final String BLUE_GHOST_DOWN_1 = "Image File\\Blue_Down1.jpg";
+    public static final String BLUE_GHOST_DOWN_2 = "Image File\\Blue_Down2.jpg";
+    public static final String BLUE_GHOST_RIGHT = "Image File\\Blue_Right.jpg";
+
+    public static final String ORANGE_GHOST_LEFT_1 = "Image File\\Orange_Left1.jpg";
+    public static final String ORANGE_GHOST_LEFT_2 = "Image File\\Orange_Left2.jpg";
+    public static final String ORANGE_GHOST_DOWN_1 = "Image File\\Orange_Down1.jpg";
+    public static final String ORANGE_GHOST_DOWN_2 = "Image File\\Orange_Down2.jpg";
+    public static final String ORANGE_GHOST_RIGHT = "Image File\\Orange_Right.jpg";
+
+    public static final String TRACE_GHOST_1 = "Image File\\Trace1.jpg";
+    public static final String TRACE_GHOST_2 = "Image File\\Trace2.jpg";
+    public static final String DIE_GHOST_1 = "Image File\\Die1.jpg";
+    public static final String DIE_GHOST_2 = "Image File\\Die2.jpg";
 
     private Constants(){
         throw new AssertionError();

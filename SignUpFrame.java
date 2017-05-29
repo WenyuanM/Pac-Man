@@ -57,7 +57,7 @@ public class SignUpFrame {
         _passwordLabel1.setForeground(Color.WHITE);
         _passwordLabel1.setFont(_font);
 
-        _passwordLabel2= new JLabel("Enter again");
+        _passwordLabel2= new JLabel("Confirm Password");
         _passwordLabel2.setFont(_font);
         _passwordLabel2.setForeground(Color.WHITE);
 

@@ -1,4 +1,5 @@
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -7,13 +8,13 @@ import java.io.IOException;
  * to store all the information of the character, such as image, moving direction, position, speed, name and type
  */
 public class Character {
-    private char _type; // P = PAC MAN || N = NORMAL GHOST || S = SMART GHOST || - = UNDEFINED
-    private BufferedImage _images;
-    private char _movingDirection;  // L = LEFT || R = RIGHT || U = UP || D = DOWN || - = UNDEFINED
-    private Coordinate _position;
-    private Coordinate _speed;
-    private int _row;
-    private int _col;
+    protected char _type; // P = PAC MAN || N = NORMAL GHOST || S = SMART GHOST || - = UNDEFINED
+    protected BufferedImage[] _images;
+    protected char _movingDirection;  // L = LEFT || R = RIGHT || U = UP || D = DOWN || - = UNDEFINED
+    protected Coordinate _position;
+    protected Coordinate _speed;
+    protected int _row;
+    protected int _col;
 
     // =========================== Constructor =====================
     public Character(){
@@ -26,13 +27,22 @@ public class Character {
 
     // ============================ Public Methods =========================
 
-    public void initialCharacter(Coordinate pos,Coordinate speed,int row,int col,char name){
+    public void initialImages(String... imageNames){
+        int size = imageNames.length;
         try{
-            _images = ImageIO.read(new File(Constants.PAC_MAN_FACING_RIGHT));
+            _images = new BufferedImage[size];
+            for(int i=0;i<size;i++){
+                _images[i] = ImageIO.read(new File(imageNames[i]));
+
+            }
         }
         catch(IOException exception){
             System.out.println("Load Pac man image FAIL!");
         }
+
+    }
+
+    public void initialCharacter(Coordinate pos,Coordinate speed,int row,int col,char name){
         _type = name;
         _movingDirection = '-';
         _position = pos;
@@ -76,9 +86,15 @@ public class Character {
         }
     }
 
-    public BufferedImage get_images(){
-        return _images;
+    public void set_row(int row){
+        _row = row;
     }
+
+    public void set_col(int col){
+        _col = col;
+    }
+
+    public void set_type(char name) {_type = name;}
 
     public Coordinate get_position(){
         return _position;
@@ -92,14 +108,6 @@ public class Character {
         return _col;
     }
 
-    public void set_row(int row){
-        _row = row;
-    }
-
-    public void set_col(int col){
-        _col = col;
-    }
-
     public char get_movingDirection() {return _movingDirection;}
 
     public void printCharacterInfo(){
@@ -110,7 +118,7 @@ public class Character {
     }
 
     // ========================== Private Methods =========================
-    private boolean updateMovingDirection(int code){
+    protected boolean updateMovingDirection(int code){
         switch(code){
             case 87:
             case 38:
@@ -134,7 +142,7 @@ public class Character {
         }
     }
 
-    private boolean updateSpeed(){
+    protected boolean updateSpeed(){
         switch(_movingDirection){
             case '-':
                 // UNDEFINED
