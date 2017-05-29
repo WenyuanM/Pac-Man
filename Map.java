@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-
 /**
  * to store all the grids into an arrayList and sidebar
  */
@@ -125,11 +123,10 @@ public class Map {
                 return row * _mapCol + (col + 1);
             }
         }
-        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!return -1");
-        return -1;
+        return 0;
     }
 
-    public int updateFood(Coordinate pacManPosition,int row,int col){
+    public int updateFood(int row,int col){
         int index = row * _mapCol + col;
         Grid grid = get_grid(index);
         if(grid.get_containFood()){
@@ -137,6 +134,54 @@ public class Map {
             return 1;
         }
         return 0;
+    }
+
+    public boolean updateValid(Coordinate position,int row,int col){
+        // character left top point
+        Coordinate point = position.subtract(new Coordinate((double)(Constants.CHARACTER_IMAGE_SIZE/2),
+                (double)(Constants.CHARACTER_IMAGE_SIZE/2)));
+        int index = findGridIndex(point,row,col);
+        int newRow = index / _mapCol;
+        int newCol = index % _mapCol;
+        if(_map[newRow][newCol].get_type().equals("|")){
+            System.out.println("++++++++++++++++++ Left Top RETURN FALSE");
+            return false;
+        }
+
+        // character left bottom point
+        point = position.add(new Coordinate((double)(-Constants.CHARACTER_IMAGE_SIZE/2),
+                (double)(Constants.CHARACTER_IMAGE_SIZE/2)));
+        index = findGridIndex(point,row,col);
+        newRow = index / _mapCol;
+        newCol = index % _mapCol;
+        if(_map[newRow][newCol].get_type().equals("|")){
+            System.out.println("++++++++++++++++++ Left Bottom RETURN FALSE");
+            return false;
+        }
+
+        // character right top point
+        point = position.add(new Coordinate((double)(Constants.CHARACTER_IMAGE_SIZE/2),
+                (double)(-Constants.CHARACTER_IMAGE_SIZE/2)));
+        index = findGridIndex(point,row,col);
+        newRow = index / _mapCol;
+        newCol = index % _mapCol;
+        if(_map[newRow][newCol].get_type().equals("|")){
+            System.out.println("++++++++++++++++++ Right Top RETURN FALSE");
+            return false;
+        }
+
+        // character right bottom point
+        point = position.add(new Coordinate((double)(Constants.CHARACTER_IMAGE_SIZE/2),
+                (double)(Constants.CHARACTER_IMAGE_SIZE/2)));
+        index = findGridIndex(point,row,col);
+        newRow = index / _mapCol;
+        newCol = index % _mapCol;
+        if(_map[newRow][newCol].get_type().equals("|")){
+            System.out.println("++++++++++++++++++ Right Bottom RETURN FALSE");
+            return false;
+        }
+        System.out.println("RETURN TRUE");
+        return true;
     }
 
     public Grid get_grid(int index){

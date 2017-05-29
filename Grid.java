@@ -4,7 +4,7 @@
 
 public class Grid {
     private int _index;
-    private String _type;  // . for food, | for blocks, O for big food, - for road
+    private String _type;  // . for food, | for blocks, O for big food, - for connecting left and right
     private Coordinate _size;   // x = width; y = height
     private Coordinate _position;
     private int[] _neighbors;

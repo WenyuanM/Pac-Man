@@ -1,7 +1,3 @@
-/**
- * Created by Nancy on 2017/5/23.
- */
-
 public final class Constants{
     public static final boolean DEBUG = true;
 
@@ -16,7 +12,7 @@ public final class Constants{
     public static final int LOGINFRAME_FRAME_WIDTH = 1050;
 
     public static final int SIGNUPFRAME_FRAME_HEIGHT = 400;
-    public static final int SIGNUPFRAME_FRAME_WIDTH = 600;
+    public static final int SIGNUPFRAME_FRAME_WIDTH = 1200;
 
     public static final int FIELD_WIDTH = 10;
 
@@ -32,6 +28,9 @@ public final class Constants{
     // ==================== FOR GRID CLASS ======================
     public static final int NEIGHBOR_NUM = 4;
     public static final int SMALL_FOOD_SIZE = 6;
+    public static final int TRANSITION_ROW = 16;
+    public static final int TRANSITION_LEFT_COL = 0;
+    public static final int TRANSITION_RIGHT_COL = 27;
 
     // ===================== FOR CHARACTER ===================
     public static final double SPEED = 3;

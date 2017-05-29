@@ -50,8 +50,7 @@ public class GameFrame implements MouseMotionListener,KeyListener{
         Coordinate pos = grid.get_position();
         Coordinate size = grid.get_size();
         size = size.divide(2);
-        Coordinate position = pos.add(size);
-        return position;
+        return pos.add(size);
     }
 
     private void drawOffImg(){
@@ -74,17 +73,11 @@ public class GameFrame implements MouseMotionListener,KeyListener{
     private void drawSingleGrid(Graphics shape,Coordinate leftTop,Coordinate size,String type){
         if(type.equals("|")){
             shape.setColor(Color.BLUE);
-//            shape.fillRoundRect((int)leftTop.getX() + Constants.DRAWING_ADJUST,(int)leftTop.getY() + Constants.DRAWING_ADJUST,
-//                    (int)size.getX() + Constants.DRAWING_ADJUST,(int)size.getY() + Constants.DRAWING_ADJUST,
-//                    -(int)(size.getX()/2),-(int)(size.getX()/2));
             shape.fillRect((int)leftTop.getX() + Constants.DRAWING_ADJUST,(int)leftTop.getY() + Constants.DRAWING_ADJUST,
                     (int)size.getX() + Constants.DRAWING_ADJUST,(int)size.getY() + Constants.DRAWING_ADJUST);
         }
         else{
             shape.setColor(Color.BLACK);
-//            shape.fillRoundRect((int)leftTop.getX() + Constants.DRAWING_ADJUST,(int)leftTop.getY() + Constants.DRAWING_ADJUST,
-//                    (int)size.getX() + Constants.DRAWING_ADJUST,(int)size.getY() + Constants.DRAWING_ADJUST,
-//                    (int)(size.getX()/2),(int)(size.getX()/2));
             shape.fillRect((int)leftTop.getX() + Constants.DRAWING_ADJUST,(int)leftTop.getY() + Constants.DRAWING_ADJUST,
                     (int)size.getX() + Constants.DRAWING_ADJUST,(int)size.getY() + Constants.DRAWING_ADJUST);
         }
@@ -110,13 +103,7 @@ public class GameFrame implements MouseMotionListener,KeyListener{
     @Override
     public void keyPressed(KeyEvent e) {
         int code = e.getKeyCode();
-        System.out.println("Key: " + code);
-        _pacMan.update(code);
-        System.out.println(_pacMan.get_position());
-        int index = _map.findGridIndex(_pacMan.get_position(),_pacMan.get_row(),_pacMan.get_col());
-        _pacMan.set_row(index / _map.get_mapCol());
-        _pacMan.set_col(index % _map.get_mapCol());
-        _map.updateFood(_pacMan.get_position(),_pacMan.get_row(),_pacMan.get_col());
+        updatePacMan(code);
         _mapComponent.repaint();
     }
 
@@ -125,6 +112,29 @@ public class GameFrame implements MouseMotionListener,KeyListener{
         // LEAVE BLANK
     }
 
+    private void updatePacMan(int code){
+        Coordinate newPosPacMan = _pacMan.ifUpdate(code);
+        int index = _map.findGridIndex(newPosPacMan,_pacMan.get_row(),_pacMan.get_col());
+        int row = index / _map.get_mapCol();
+        int col = index % _map.get_mapCol();
+        char movingDirection = _pacMan.get_movingDirection();
+        if(!(row == Constants.TRANSITION_ROW && col == Constants.TRANSITION_LEFT_COL && movingDirection == 'L') &&
+                !(row == Constants.TRANSITION_ROW && col == Constants.TRANSITION_RIGHT_COL && movingDirection == 'R')){
+            if(_map.updateValid(newPosPacMan,row,col)){
+                Coordinate gridLeftTop = _map.get_grid(row,col).get_position();
+                Coordinate gridSize = _map.get_grid(row,col).get_size();
+                Coordinate gridCenter = new Coordinate(gridLeftTop.getX() + gridSize.getX() / 2,
+                        gridLeftTop.getY() + gridSize.getY() / 2);
+                newPosPacMan = _pacMan.adjustPos(newPosPacMan,gridCenter);
+                _pacMan.update(newPosPacMan,row,col);
+            }
+        }
+        else{
+            _gamePoint += _map.updateFood(row,col);
+            _pacMan.updateTransition(col,_map.get_mapCol());
+        }
+        _gamePoint += _map.updateFood(_pacMan.get_row(),_pacMan.get_col());
+    }
 
     private class MapComponent extends JComponent{
         public void paintComponent(Graphics shape){
@@ -136,9 +146,6 @@ public class GameFrame implements MouseMotionListener,KeyListener{
         private void drawCharacters(Graphics shape){
             BufferedImage image = _pacMan.get_images();
             Coordinate position = _pacMan.get_position();
-//            int row = _pacMan.get_row();
-//            int col = _pacMan.get_col();
-//            Coordinate size = _map.get_grid(row,col).get_size();
             int size = Constants.CHARACTER_IMAGE_SIZE;
             shape.drawImage(image,(int)(position.getX()-size/2),(int)(position.getY()-size/2),size,size,null);
         }
@@ -159,12 +166,11 @@ public class GameFrame implements MouseMotionListener,KeyListener{
 
         private void drawSingleFood(Graphics shape,Coordinate leftTop,Coordinate size,String type){
             shape.setColor(Color.YELLOW);
-            if(type.equals(".")){
+            if(type.equals(".") || type.equals("-")){
                 int x = (int)(leftTop.getX() + size.getX() / 2);
                 int y = (int)(leftTop.getY() + size.getY() / 2);
                 shape.fillOval(x,y,Constants.SMALL_FOOD_SIZE,Constants.SMALL_FOOD_SIZE);
             }
         }
-
     }
 }
