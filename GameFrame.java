@@ -16,6 +16,7 @@ public class GameFrame implements MouseMotionListener,KeyListener{
     private Map _map;
     private Game_Character _characters;
     private int _gamePoint;
+    private boolean _gameMode;  // T = Ghosts eat Pac Man || F = Pac Man eats Ghosts
 
     public GameFrame(Map map){
         _gameFrame = new JFrame();
@@ -52,7 +53,6 @@ public class GameFrame implements MouseMotionListener,KeyListener{
 
     private void drawMap(Graphics shape){
         int mapSize = _map.get_mapSize();
-        if(Constants.DEBUG) System.out.println("Map Size: " + mapSize);
         for(int i=0;i<mapSize;i++){
             Grid g = _map.get_grid(i);
             Coordinate leftTop = g.get_position();
@@ -96,6 +96,7 @@ public class GameFrame implements MouseMotionListener,KeyListener{
     public void keyPressed(KeyEvent e) {
         int code = e.getKeyCode();
         updatePacMan(code);
+//        _characters.update_NormalGhosts();
 //        _mapComponent.repaint();
     }
 
@@ -117,11 +118,9 @@ public class GameFrame implements MouseMotionListener,KeyListener{
                         _characters.update_NormalGhosts();
                         repaint();
                         try{
-                            Thread.sleep(10);
+                            Thread.sleep(50);
                         }
-                        catch(Exception exception){
-                            System.out.println("+++++++++++++++++++++++++++++++++++");
-                        }
+                        catch(Exception exception){}
                     }
                 }
             });

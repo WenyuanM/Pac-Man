@@ -1,3 +1,5 @@
+import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
+
 /**
  * to store one single grid on the map
  */
@@ -8,6 +10,7 @@ public class Grid {
     private Coordinate _size;   // x = width; y = height
     private Coordinate _position;
     private int[] _neighbors;
+    private boolean[] _hasNeighbors;
     private int _neighborNum;
     private boolean _containFood;
 
@@ -26,6 +29,7 @@ public class Grid {
             _containFood = true;
         }
         initialNeighborArray();
+        initialHasNeighborArray();
 //        _slope = 0;
 //        _occupation = "None";
     }
@@ -45,6 +49,10 @@ public class Grid {
         }
     }
 
+    public void addHasNeighbor(int num,boolean has){
+        _hasNeighbors[num] = has;
+    }
+
     public void addNeighbor(int neighbor){
         _neighbors[_neighborNum] = neighbor;
         _neighborNum++;
@@ -62,9 +70,13 @@ public class Grid {
         return _size;
     }
 
-    public void set_containFood(boolean contain){_containFood = contain;}
+    public int get_neighborNum() {return _neighborNum;}
+
+    public boolean[] get_hasNeighbors() {return _hasNeighbors;}
 
     public boolean get_containFood(){return _containFood;}
+
+    public void set_containFood(boolean contain){_containFood = contain;}
 
     public String toString(){
         String s = _index + " " + _type + " " + "Neighbor: ";
@@ -80,6 +92,14 @@ public class Grid {
         int length = _neighbors.length;
         for(int i=0;i<length;i++){
             _neighbors[i] = -1;
+        }
+    }
+
+    private void initialHasNeighborArray(){
+        _hasNeighbors = new boolean[Constants.NEIGHBOR_NUM];
+        int length = _hasNeighbors.length;
+        for(int i=0;i<length;i++){
+            _hasNeighbors[i] = false;
         }
     }
 }

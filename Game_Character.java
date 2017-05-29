@@ -1,7 +1,4 @@
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.nio.Buffer;
-import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -59,16 +56,66 @@ public class Game_Character {
         return ghosts;
     }
 
-    private int randomDirectionGenerate(){
-        int n = ThreadLocalRandom.current().nextInt(1,4 + 1);
-        switch(n){
-            case 1: // up
+    private int randomDirectionGenerate(char currentMovingDirection,boolean[] hasNeighbor){
+        Random generator = new Random();
+        int number = 0;
+        int notComingDirection = notComingDirection(currentMovingDirection);
+        while(true){
+            number = generator.nextInt(3);
+            if(hasNeighbor[number] && (number != notComingDirection)){
+                return findMatchingCode(number);
+            }
+        }
+    }
+
+    private int notComingDirection(char currentMovingDirection){
+        switch(currentMovingDirection){
+            case 'L':
+                return 3;
+            case 'R':
+                return 2;
+            case 'U':
+                return 1;
+            case 'D':
+                return 0;
+        }
+        return -1;
+    }
+
+    private boolean checkWhetherGenerateRandomDirection(Ghost ghost){
+        if(ghost.get_movingDirection() == '-'){
+            // There is no moving direction been assigned
+            return true;
+        }
+        if((ghost.get_row() == ghost.get_previousRow()) && (ghost.get_previousCol() == ghost.get_col())){
+            return false;
+        }
+        if(_map.get_grid(ghost.get_row(),ghost.get_col()).get_neighborNum() > 2){
+            return true;
+        }
+        return false;
+    }
+
+    private int findTheOtherWay(boolean[] hasNeighbor,char currentMovingDirection){
+        int notComingDirection = notComingDirection(currentMovingDirection);
+        int i=0;
+        for(i=0;i<Constants.NEIGHBOR_NUM;i++){
+            if(hasNeighbor[i] && (i != notComingDirection)){
+                break;
+            }
+        }
+        return findMatchingCode(i);
+    }
+
+    private int findMatchingCode(int i){
+        switch(i){
+            case 0: // up
                 return 87;
-            case 2: // down
+            case 1: // down
                 return 83;
-            case 3: // left
+            case 2: // left
                 return 65;
-            case 4: // right
+            case 3: // right
                 return 68;
         }
         return -1;
@@ -76,15 +123,35 @@ public class Game_Character {
 
     public void update_NormalGhosts(){
         int size = _normalGhosts.length;
+        int code = -1;
         for(int i=0;i<size;i++){
-            int code = randomDirectionGenerate();
+            System.out.println("Ghost " + i + ") ");
+            char movingDirection = _normalGhosts[i].get_movingDirection();
+            System.out.println("Moving direction: " + movingDirection);
+            int currentRow = _normalGhosts[i].get_row();
+            int currentCol = _normalGhosts[i].get_col();
+            System.out.println("Row: " + currentRow + ", Col: " + currentCol);
+            if(checkWhetherGenerateRandomDirection(_normalGhosts[i])){
+                System.out.println("Random Direction");
+                boolean[] hasNeighbor = _map.get_grid(_normalGhosts[i].get_row(),_normalGhosts[i].get_col()).get_hasNeighbors();
+                code = randomDirectionGenerate(movingDirection, hasNeighbor);
+                System.out.println("The new code: " + code);
+            }
+            else if(_map.get_grid(_normalGhosts[i].get_row(),_normalGhosts[i].get_col()).get_neighborNum() == 2
+                    && !((_normalGhosts[i].get_row() == _normalGhosts[i].get_previousRow())
+                    && (_normalGhosts[i].get_previousCol() == _normalGhosts[i].get_col()))) {
+                System.out.println("Choose the other way");
+                boolean[] hasNeighbor = _map.get_grid(_normalGhosts[i].get_row(), _normalGhosts[i].get_col()).get_hasNeighbors();
+                code = findTheOtherWay(hasNeighbor,movingDirection);
+                System.out.println("The new code: " + code);
+            }
             Coordinate newPos = _normalGhosts[i].ifUpdate(code);
             int index = _map.findGridIndex(newPos,_normalGhosts[i].get_row(),_normalGhosts[i].get_col());
             int row = index / _map.get_mapCol();
             int col = index % _map.get_mapCol();
-            char movingDirection = _normalGhosts[i].get_movingDirection();
-            if(!(row == Constants.TRANSITION_ROW && col == Constants.TRANSITION_LEFT_COL && movingDirection == 'L') &&
-                    !(row == Constants.TRANSITION_ROW && col == Constants.TRANSITION_RIGHT_COL && movingDirection == 'R')){
+            char newMovingDirection = _normalGhosts[i].get_movingDirection();
+            if(!(row == Constants.TRANSITION_ROW && col == Constants.TRANSITION_LEFT_COL && newMovingDirection == 'L') &&
+                    !(row == Constants.TRANSITION_ROW && col == Constants.TRANSITION_RIGHT_COL && newMovingDirection == 'R')){
                 if(_map.updateValid(newPos,row,col)){
                     Coordinate gridLeftTop = _map.get_grid(row,col).get_position();
                     Coordinate gridSize = _map.get_grid(row,col).get_size();
@@ -97,7 +164,9 @@ public class Game_Character {
             else{
                 _normalGhosts[i].updateTransition(col,_map.get_mapCol());
             }
+            code = -1;
         }
+        System.out.println("==================");
     }
 
     public int update_PacMan(int code){

@@ -32,5 +32,4 @@ public class Ghost extends Character{
         int size = Constants.CHARACTER_IMAGE_SIZE;
         shape.drawImage(image,(int)(_position.getX()-size/2),(int)(_position.getY()-size/2),size,size,null);
     }
-
 }

@@ -33,7 +33,7 @@ public final class Constants{
     public static final int TRANSITION_RIGHT_COL = 27;
 
     // ===================== FOR CHARACTER ===================
-    public static final double SPEED = 3;
+    public static final double SPEED = 5;
     public static final int CHARACTER_IMAGE_SIZE = 25;
     public static final int GRID_ROW = 20;
     public static final int GRID_COL = 13;
