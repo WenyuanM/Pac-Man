@@ -15,6 +15,8 @@ public class Character {
     protected Coordinate _speed;
     protected int _row;
     protected int _col;
+    protected int _previousRow;
+    protected int _previousCol;
 
     // =========================== Constructor =====================
     public Character(){
@@ -49,6 +51,8 @@ public class Character {
         _speed = speed;
         _row = row;
         _col = col;
+        _previousRow = row;
+        _previousCol = col;
     }
 
     public Coordinate ifUpdate(int code){
@@ -70,12 +74,13 @@ public class Character {
 
     public void update(Coordinate newPosition,int row,int col){
         _position = newPosition;
+        _previousRow = _row;
+        _previousCol = _col;
         _row = row;
         _col = col;
     }
 
     public void updateTransition(int col,int maxCol){
-        System.out.println("In the updateTransition method!!!!!!!!!!!!!!!!!!!1");
         if(col == Constants.TRANSITION_LEFT_COL){
             _position.setX(Constants.GAMEFRAME_FRAME_WIDTH - Constants.CHARACTER_IMAGE_SIZE / 2);
             _col = maxCol - 1;
@@ -108,6 +113,14 @@ public class Character {
         return _col;
     }
 
+    public int get_previousRow(){
+        return _previousRow;
+    }
+
+    public int get_previousCol(){
+        return _previousCol;
+    }
+
     public char get_movingDirection() {return _movingDirection;}
 
     public void printCharacterInfo(){
@@ -135,6 +148,9 @@ public class Character {
             case 68:
             case 39:
                 _movingDirection = 'R';
+                return true;
+            case -1:
+                // keep the moving direction as the last one
                 return true;
             default:
                 _movingDirection = '-';

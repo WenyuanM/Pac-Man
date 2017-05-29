@@ -64,24 +64,28 @@ public class Map {
         if(i > 0){
             // up neighbor
             if(!_map[i-1][j].get_type().equals("|")){
+                _map[i][j].addHasNeighbor(0,true);
                 _map[i][j].addNeighbor(_map[i-1][j].get_index());
             }
         }
         if(i < _mapRow - 1){
             // down neighbor
             if(!_map[i+1][j].get_type().equals("|")){
+                _map[i][j].addHasNeighbor(1,true);
                 _map[i][j].addNeighbor(_map[i+1][j].get_index());
             }
         }
         if(j > 0){
             // left neighbor
             if(!_map[i][j-1].get_type().equals("|")){
+                _map[i][j].addHasNeighbor(2,true);
                 _map[i][j].addNeighbor(_map[i][j-1].get_index());
             }
         }
         if(j < _mapCol - 1){
             // right neighbor
             if(!_map[i][j+1].get_type().equals("|")){
+                _map[i][j].addHasNeighbor(3,true);
                 _map[i][j].addNeighbor(_map[i][j+1].get_index());
             }
         }
@@ -144,7 +148,6 @@ public class Map {
         int newRow = index / _mapCol;
         int newCol = index % _mapCol;
         if(_map[newRow][newCol].get_type().equals("|")){
-            System.out.println("++++++++++++++++++ Left Top RETURN FALSE");
             return false;
         }
 
@@ -155,7 +158,6 @@ public class Map {
         newRow = index / _mapCol;
         newCol = index % _mapCol;
         if(_map[newRow][newCol].get_type().equals("|")){
-            System.out.println("++++++++++++++++++ Left Bottom RETURN FALSE");
             return false;
         }
 
@@ -166,7 +168,6 @@ public class Map {
         newRow = index / _mapCol;
         newCol = index % _mapCol;
         if(_map[newRow][newCol].get_type().equals("|")){
-            System.out.println("++++++++++++++++++ Right Top RETURN FALSE");
             return false;
         }
 
@@ -177,10 +178,8 @@ public class Map {
         newRow = index / _mapCol;
         newCol = index % _mapCol;
         if(_map[newRow][newCol].get_type().equals("|")){
-            System.out.println("++++++++++++++++++ Right Bottom RETURN FALSE");
             return false;
         }
-        System.out.println("RETURN TRUE");
         return true;
     }
 
