@@ -13,15 +13,15 @@ public class GameFrame implements MouseMotionListener,KeyListener{
     private JComponent _mapComponent;
     private BufferedImage _offImg;
 
-    private Character _pacMan;
     private Map _map;
+    private Game_Character _characters;
     private int _gamePoint;
 
     public GameFrame(Map map){
         _gameFrame = new JFrame();
         _gamePoint = 0;
         _map = map;
-        _pacMan = new Character(generatePacManStartPos(),new Coordinate(0,0),Constants.GRID_ROW,Constants.GRID_COL,'P');
+        _characters = new Game_Character(_map,4,0);
         _offImg = new BufferedImage(Constants.GAMEFRAME_FRAME_WIDTH, Constants.GAMEFRAME_FRAME_HEIGHT,BufferedImage.TYPE_INT_RGB);
         drawOffImg();
         _mapComponent = new MapComponent();
@@ -43,14 +43,6 @@ public class GameFrame implements MouseMotionListener,KeyListener{
         _insidePanel.setLayout(new BorderLayout());
         _insidePanel.setPreferredSize(new Dimension(Constants.GAMEFRAME_FRAME_WIDTH,Constants.GAMEFRAME_FRAME_HEIGHT));
         _insidePanel.add(_mapComponent,BorderLayout.CENTER);
-    }
-
-    private Coordinate generatePacManStartPos(){
-        Grid grid = _map.get_grid(Constants.GRID_ROW,Constants.GRID_COL);
-        Coordinate pos = grid.get_position();
-        Coordinate size = grid.get_size();
-        size = size.divide(2);
-        return pos.add(size);
     }
 
     private void drawOffImg(){
@@ -104,7 +96,7 @@ public class GameFrame implements MouseMotionListener,KeyListener{
     public void keyPressed(KeyEvent e) {
         int code = e.getKeyCode();
         updatePacMan(code);
-        _mapComponent.repaint();
+//        _mapComponent.repaint();
     }
 
     @Override
@@ -113,30 +105,29 @@ public class GameFrame implements MouseMotionListener,KeyListener{
     }
 
     private void updatePacMan(int code){
-        Coordinate newPosPacMan = _pacMan.ifUpdate(code);
-        int index = _map.findGridIndex(newPosPacMan,_pacMan.get_row(),_pacMan.get_col());
-        int row = index / _map.get_mapCol();
-        int col = index % _map.get_mapCol();
-        char movingDirection = _pacMan.get_movingDirection();
-        if(!(row == Constants.TRANSITION_ROW && col == Constants.TRANSITION_LEFT_COL && movingDirection == 'L') &&
-                !(row == Constants.TRANSITION_ROW && col == Constants.TRANSITION_RIGHT_COL && movingDirection == 'R')){
-            if(_map.updateValid(newPosPacMan,row,col)){
-                Coordinate gridLeftTop = _map.get_grid(row,col).get_position();
-                Coordinate gridSize = _map.get_grid(row,col).get_size();
-                Coordinate gridCenter = new Coordinate(gridLeftTop.getX() + gridSize.getX() / 2,
-                        gridLeftTop.getY() + gridSize.getY() / 2);
-                newPosPacMan = _pacMan.adjustPos(newPosPacMan,gridCenter);
-                _pacMan.update(newPosPacMan,row,col);
-            }
-        }
-        else{
-            _gamePoint += _map.updateFood(row,col);
-            _pacMan.updateTransition(col,_map.get_mapCol());
-        }
-        _gamePoint += _map.updateFood(_pacMan.get_row(),_pacMan.get_col());
+        _gamePoint += _characters.update_PacMan(code);
     }
 
     private class MapComponent extends JComponent{
+        public MapComponent(){
+            Thread animationThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    while(true){
+                        _characters.update_NormalGhosts();
+                        repaint();
+                        try{
+                            Thread.sleep(10);
+                        }
+                        catch(Exception exception){
+                            System.out.println("+++++++++++++++++++++++++++++++++++");
+                        }
+                    }
+                }
+            });
+            animationThread.start();
+        }
+
         public void paintComponent(Graphics shape){
             shape.drawImage(_offImg,0,0,null);
             drawCharacters(shape);
@@ -144,10 +135,7 @@ public class GameFrame implements MouseMotionListener,KeyListener{
         }
 
         private void drawCharacters(Graphics shape){
-            BufferedImage image = _pacMan.get_images();
-            Coordinate position = _pacMan.get_position();
-            int size = Constants.CHARACTER_IMAGE_SIZE;
-            shape.drawImage(image,(int)(position.getX()-size/2),(int)(position.getY()-size/2),size,size,null);
+            _characters.drawCharacters(shape);
         }
 
         private void drawFood(Graphics shape){
