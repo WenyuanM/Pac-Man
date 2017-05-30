@@ -5,6 +5,9 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 
 public class GameFrame implements MouseMotionListener,KeyListener{
@@ -16,17 +19,24 @@ public class GameFrame implements MouseMotionListener,KeyListener{
     private Map _map;
     private Game_Character _characters;
     private int _gamePoint;
+    Date _modeTime;
+    private SimpleDateFormat _dateFormat;
+    private SimpleDateFormat _timeFormat;
     private boolean _gameMode;  // T = Ghosts eat Pac Man || F = Pac Man eats Ghosts
 
     public GameFrame(Map map){
         _gameFrame = new JFrame();
         _gamePoint = 0;
+        _gameMode = true;
         _map = map;
         _characters = new Game_Character(_map,4,0);
         _offImg = new BufferedImage(Constants.GAMEFRAME_FRAME_WIDTH, Constants.GAMEFRAME_FRAME_HEIGHT,BufferedImage.TYPE_INT_RGB);
         drawOffImg();
         _mapComponent = new MapComponent();
         createInsidePanel();
+
+        _timeFormat = new SimpleDateFormat("h:mm a");
+        _dateFormat = new SimpleDateFormat("EEE,d MMM yyyy");
 
         _gameFrame.addMouseMotionListener(this);
         _gameFrame.addKeyListener(this);
@@ -106,7 +116,15 @@ public class GameFrame implements MouseMotionListener,KeyListener{
     }
 
     private void updatePacMan(int code){
-        _gamePoint += _characters.update_PacMan(code);
+        int earnPoint = _characters.update_PacMan(code);
+        _gamePoint += earnPoint;
+        if(earnPoint >= 2){
+            // eat the big dot
+            _gameMode = false;
+            Calendar currentCalendar = Calendar.getInstance();
+            _modeTime = currentCalendar.getTime();
+
+        }
     }
 
     private class MapComponent extends JComponent{
@@ -116,6 +134,21 @@ public class GameFrame implements MouseMotionListener,KeyListener{
                 public void run() {
                     while(true){
                         _characters.update_NormalGhosts();
+                        if(_gameMode){
+                            if(_characters.checkPacManDies()){
+                                _characters.restartCharacters();
+                            }
+                        }
+                        else{
+                            if(_characters.checkGhostsDies()){
+                                _gamePoint += 100;
+                            }
+                            Calendar currentCalendar = Calendar.getInstance();
+                            Date time = currentCalendar.getTime();
+                            if((time.getTime() - _modeTime.getTime()) > Constants.MODE_PERIOD){
+                                _gameMode = true;
+                            }
+                        }
                         repaint();
                         try{
                             Thread.sleep(50);
@@ -134,7 +167,7 @@ public class GameFrame implements MouseMotionListener,KeyListener{
         }
 
         private void drawCharacters(Graphics shape){
-            _characters.drawCharacters(shape);
+            _characters.drawCharacters(shape,_gameMode);
         }
 
         private void drawFood(Graphics shape){
@@ -157,6 +190,11 @@ public class GameFrame implements MouseMotionListener,KeyListener{
                 int x = (int)(leftTop.getX() + size.getX() / 2);
                 int y = (int)(leftTop.getY() + size.getY() / 2);
                 shape.fillOval(x,y,Constants.SMALL_FOOD_SIZE,Constants.SMALL_FOOD_SIZE);
+            }
+            if(type.equals("o")){
+                int x = (int)(leftTop.getX() + size.getX() / 2);
+                int y = (int)(leftTop.getY() + size.getY() / 2);
+                shape.fillOval(x,y,Constants.BIG_FOOD_SIZE,Constants.BIG_FOOD_SIZE);
             }
         }
     }

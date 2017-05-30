@@ -1,6 +1,5 @@
 import java.awt.*;
 import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * to store all the characters = PAC MAN + GHOSTS
@@ -15,12 +14,14 @@ public class Game_Character {
 
     public Game_Character(Map map){
         _map = map;
-        _pacMan = new PacMan(generatePacManStartPos(),new Coordinate(0,0),Constants.GRID_ROW,Constants.GRID_COL);
+        _pacMan = new PacMan(generateStartPos(Constants.PACMAN_GRID_ROW,Constants.PACMAN_GRID_COL),new Coordinate(0,0),
+                Constants.PACMAN_GRID_ROW,Constants.PACMAN_GRID_COL);
     }
 
     public Game_Character(Map map,int numOfNormalGhosts,int numofSmartGhost){
         _map = map;
-        _pacMan = new PacMan(generatePacManStartPos(),new Coordinate(0,0),Constants.GRID_ROW,Constants.GRID_COL);
+        _pacMan = new PacMan(generateStartPos(Constants.PACMAN_GRID_ROW,Constants.PACMAN_GRID_COL),new Coordinate(0,0),
+                Constants.PACMAN_GRID_ROW,Constants.PACMAN_GRID_COL);
 
         Ghost[] ghostList = initialGhosts();
         _normalGhosts = new Ghost[numOfNormalGhosts];
@@ -34,19 +35,18 @@ public class Game_Character {
         }
     }
 
-    // ========================== Public Methods ===========================
     private Ghost[] initialGhosts(){
         Ghost[] ghosts = new Ghost[4];
-        Ghost ghost1 = new Ghost(generatePacManStartPos(),new Coordinate(0,0),Constants.GRID_ROW,Constants.GRID_COL,'N',
+        Ghost ghost1 = new Ghost(generateStartPos(Constants.GHOST_GRID_ROW,Constants.GHOST_GRID_COL),new Coordinate(0,0),Constants.GHOST_GRID_ROW,Constants.GHOST_GRID_COL,'N',
                 Constants.RED_GHOST_DOWN_1,Constants.RED_GHOST_DOWN_2,Constants.RED_GHOST_LEFT_1,Constants.RED_GHOST_LEFT_2,
                 Constants.RED_GHOST_RIGHT,Constants.TRACE_GHOST_1,Constants.TRACE_GHOST_2,Constants.DIE_GHOST_1,Constants.DIE_GHOST_2);
-        Ghost ghost2 = new Ghost(generatePacManStartPos(),new Coordinate(0,0),Constants.GRID_ROW,Constants.GRID_COL,'N',
+        Ghost ghost2 = new Ghost(generateStartPos(Constants.GHOST_GRID_ROW,Constants.GHOST_GRID_COL),new Coordinate(0,0),Constants.GHOST_GRID_ROW,Constants.GHOST_GRID_COL,'N',
                 Constants.PINK_GHOST_DOWN_1,Constants.PINK_GHOST_DOWN_2,Constants.PINK_GHOST_LEFT_1,Constants.PINK_GHOST_LEFT_2,
                 Constants.PINK_GHOST_RIGHT,Constants.TRACE_GHOST_1,Constants.TRACE_GHOST_2,Constants.DIE_GHOST_1,Constants.DIE_GHOST_2);
-        Ghost ghost3 = new Ghost(generatePacManStartPos(),new Coordinate(0,0),Constants.GRID_ROW,Constants.GRID_COL,'N',
+        Ghost ghost3 = new Ghost(generateStartPos(Constants.GHOST_GRID_ROW,Constants.GHOST_GRID_COL),new Coordinate(0,0),Constants.GHOST_GRID_ROW,Constants.GHOST_GRID_COL,'N',
                 Constants.BLUE_GHOST_DOWN_1,Constants.BLUE_GHOST_DOWN_2,Constants.BLUE_GHOST_LEFT_1,Constants.BLUE_GHOST_LEFT_2,
                 Constants.BLUE_GHOST_RIGHT,Constants.TRACE_GHOST_1,Constants.TRACE_GHOST_2,Constants.DIE_GHOST_1,Constants.DIE_GHOST_2);
-        Ghost ghost4 = new Ghost(generatePacManStartPos(),new Coordinate(0,0),Constants.GRID_ROW,Constants.GRID_COL,'N',
+        Ghost ghost4 = new Ghost(generateStartPos(Constants.GHOST_GRID_ROW,Constants.GHOST_GRID_COL),new Coordinate(0,0),Constants.GHOST_GRID_ROW,Constants.GHOST_GRID_COL,'N',
                 Constants.ORANGE_GHOST_DOWN_1,Constants.ORANGE_GHOST_DOWN_2,Constants.ORANGE_GHOST_LEFT_1,Constants.ORANGE_GHOST_LEFT_2,
                 Constants.ORANGE_GHOST_RIGHT,Constants.TRACE_GHOST_1,Constants.TRACE_GHOST_2,Constants.DIE_GHOST_1,Constants.DIE_GHOST_2);
         ghosts[0] = ghost1;
@@ -119,6 +119,19 @@ public class Game_Character {
                 return 68;
         }
         return -1;
+    }
+
+    public void restartCharacters(){
+        _pacMan.initialCharacter(generateStartPos(Constants.PACMAN_GRID_ROW,Constants.PACMAN_GRID_COL),new Coordinate(0,0),Constants.PACMAN_GRID_ROW,Constants.PACMAN_GRID_COL,'P');
+        int size = _normalGhosts.length;
+        for(int i=0;i<size;i++){
+            _normalGhosts[i].initialCharacter(generateStartPos(Constants.GHOST_GRID_ROW,Constants.GHOST_GRID_COL),new Coordinate(0,0),Constants.GHOST_GRID_ROW,Constants.GHOST_GRID_COL,'N');
+        }
+        size = _smartGhosts.length;
+        for(int i=0;i<size;i++){
+            _smartGhosts[i].initialCharacter(generateStartPos(Constants.GHOST_GRID_ROW,Constants.GHOST_GRID_COL),new Coordinate(0,0),Constants.GHOST_GRID_ROW,Constants.GHOST_GRID_COL,'S');
+        }
+
     }
 
     public void update_NormalGhosts(){
@@ -195,23 +208,62 @@ public class Game_Character {
         return gamePoint;
     }
 
-    public void drawCharacters(Graphics shape){
+    public boolean checkPacManDies(){
+        int size = _normalGhosts.length;
+        for(int i=0;i<size;i++){
+            if(_pacMan.checkCollide(_normalGhosts[i]) && !_normalGhosts[i].get_die()){
+                _pacMan.set_die(true);
+                return true;
+            }
+        }
+        size = _smartGhosts.length;
+        for(int i=0;i<size;i++){
+            if(_pacMan.checkCollide(_smartGhosts[i]) && !_smartGhosts[i].get_die()){
+                _pacMan.set_die(true);
+                return true;
+            }
+        }
+        return false;   // doesn't die
+    }
+
+    public boolean checkGhostsDies(){
+        int size = _normalGhosts.length;
+        for(int i=0;i<size;i++){
+            if(_pacMan.checkCollide(_normalGhosts[i])){
+                _normalGhosts[i].set_die(true);
+                return true;
+            }
+        }
+        size = _smartGhosts.length;
+        for(int i=0;i<size;i++){
+            if(_pacMan.checkCollide(_normalGhosts[i])){
+                _normalGhosts[i].set_die(true);
+                _pacMan.set_die(true);
+                return true;
+            }
+        }
+        return false;   // doesn't die
+    }
+
+    public void drawCharacters(Graphics shape,boolean gameMode){
         _pacMan.draw(shape);
         int size = _normalGhosts.length;
         for(int i=0;i<size;i++){
-            _normalGhosts[i].draw(shape);
+            _normalGhosts[i].draw(shape,gameMode);
         }
         size = _smartGhosts.length;
         for(int i=0;i<size;i++) {
-            _smartGhosts[i].draw(shape);
+            _smartGhosts[i].draw(shape,gameMode);
         }
     }
 
-    private Coordinate generatePacManStartPos(){
-        Grid grid = _map.get_grid(Constants.GRID_ROW,Constants.GRID_COL);
+    private Coordinate generateStartPos(int row,int col){
+        Grid grid = _map.get_grid(row,col);
         Coordinate pos = grid.get_position();
         Coordinate size = grid.get_size();
         size = size.divide(2);
         return pos.add(size);
     }
+
+
 }

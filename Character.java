@@ -17,6 +17,7 @@ public class Character {
     protected int _col;
     protected int _previousRow;
     protected int _previousCol;
+    protected boolean _die;
 
     // =========================== Constructor =====================
     public Character(){
@@ -53,6 +54,7 @@ public class Character {
         _col = col;
         _previousRow = row;
         _previousCol = col;
+        _die = false;
     }
 
     public Coordinate ifUpdate(int code){
@@ -91,12 +93,24 @@ public class Character {
         }
     }
 
+    public boolean checkCollide(Character other){
+        double distance = _position.distance(other.get_position());
+        if(distance <= Constants.CHARACTER_IMAGE_SIZE){
+            return true;
+        }
+        return false;
+    }
+
     public void set_row(int row){
         _row = row;
     }
 
     public void set_col(int col){
         _col = col;
+    }
+
+    public void set_die(boolean die){
+        _die = die;
     }
 
     public void set_type(char name) {_type = name;}
@@ -119,6 +133,10 @@ public class Character {
 
     public int get_previousCol(){
         return _previousCol;
+    }
+
+    public boolean get_die(){
+        return _die;
     }
 
     public char get_movingDirection() {return _movingDirection;}

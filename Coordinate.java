@@ -20,13 +20,9 @@ public class Coordinate {
 
     // ========================= COMMON METHODS USED OUTSIDE THE CLASS ============================
 
-    /**
-     * to update the coordinate based on move speed
-     * @param speed the current moving speed
-     */
-    public void move(Coordinate speed){
-        _x += speed.getX();
-        _y += speed.getY();
+    public double distance(Coordinate p2){
+        double inside = Math.pow((_x - p2.getX()),2) + Math.pow((_y - p2.getY()),2);
+        return Math.sqrt(inside);
     }
 
     /**

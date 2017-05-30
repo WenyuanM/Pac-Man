@@ -135,7 +135,13 @@ public class Map {
         Grid grid = get_grid(index);
         if(grid.get_containFood()){
             grid.set_containFood(false);
-            return 1;
+            if(grid.get_type().equals("o")){
+                // big food
+                return 2;
+            }
+            else{
+                return 1;
+            }
         }
         return 0;
     }

@@ -28,15 +28,19 @@ public final class Constants{
     // ==================== FOR GRID CLASS ======================
     public static final int NEIGHBOR_NUM = 4;
     public static final int SMALL_FOOD_SIZE = 6;
+    public static final int BIG_FOOD_SIZE = 12;
     public static final int TRANSITION_ROW = 16;
     public static final int TRANSITION_LEFT_COL = 0;
     public static final int TRANSITION_RIGHT_COL = 27;
 
     // ===================== FOR CHARACTER ===================
+    public static final int MODE_PERIOD = 10000;
     public static final double SPEED = 5;
     public static final int CHARACTER_IMAGE_SIZE = 25;
-    public static final int GRID_ROW = 20;
-    public static final int GRID_COL = 13;
+    public static final int PACMAN_GRID_ROW = 20;
+    public static final int PACMAN_GRID_COL = 13;
+    public static final int GHOST_GRID_ROW = 11;
+    public static final int GHOST_GRID_COL = 13;
 
     // ===================== IMAGE NAME ===========================
     public static final String LOG_IN_WINDOW_BACKGROUND = "Image File\\Log In Window Background.jpg";
