@@ -1,5 +1,5 @@
 public final class Constants{
-    public static final boolean DEBUG = true;
+    public static final boolean DEBUG = false;
 
     // ==================== GUI ==========================
     public static final int GAMEFRAME_FRAME_HEIGHT = 1300;
@@ -35,7 +35,8 @@ public final class Constants{
 
     // ===================== FOR CHARACTER ===================
     public static final int MODE_PERIOD = 10000;
-    public static final double SPEED = 5;
+    public static final double PACMAN_SPEED = 5;
+    public static final double GHOST_SPEED = 6;
     public static final int CHARACTER_IMAGE_SIZE = 25;
     public static final int PACMAN_GRID_ROW = 20;
     public static final int PACMAN_GRID_COL = 13;

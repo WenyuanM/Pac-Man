@@ -111,9 +111,14 @@ public class Character {
 
     public void set_die(boolean die){
         _die = die;
+        _movingDirection = '-';
     }
 
     public void set_type(char name) {_type = name;}
+
+    public void set_movingDirection(char movingDirection){
+        _movingDirection = movingDirection;
+    }
 
     public Coordinate get_position(){
         return _position;
@@ -176,7 +181,14 @@ public class Character {
         }
     }
 
-    protected boolean updateSpeed(){
+    public boolean updateSpeed(){
+        double speed = 0;
+        if(_type == 'P'){
+            speed = Constants.PACMAN_SPEED;
+        }
+        else{
+            speed = Constants.GHOST_SPEED;
+        }
         switch(_movingDirection){
             case '-':
                 // UNDEFINED
@@ -184,19 +196,19 @@ public class Character {
                 return true;
             case 'L':
                 // LEFT
-                _speed.setXY(-Constants.SPEED,0);
+                _speed.setXY(-speed,0);
                 return true;
             case 'R':
                 // RIGHT
-                _speed.setXY(Constants.SPEED,0);
+                _speed.setXY(speed,0);
                 return true;
             case 'U':
                 // UP
-                _speed.setXY(0,-Constants.SPEED);
+                _speed.setXY(0,-speed);
                 return true;
             case 'D':
                 // DOWN
-                _speed.setXY(0,Constants.SPEED);
+                _speed.setXY(0,speed);
                 return true;
             default:
                 _speed.setXY(0,0);
