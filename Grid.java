@@ -14,6 +14,10 @@ public class Grid {
     private int _neighborNum;
     private boolean _containFood;
 
+    // Pathfinding elements
+    private int _parent;
+    private int _Fnum;
+
     // ========================= CONSTRUCTORS FOR THIS CLASS ============================
 
     /**
@@ -30,8 +34,9 @@ public class Grid {
         }
         initialNeighborArray();
         initialHasNeighborArray();
-//        _slope = 0;
-//        _occupation = "None";
+
+        _parent = index;
+        _Fnum = 100000000;
     }
 
     // ========================= COMMON METHODS USED OUTSIDE THE CLASS ============================
@@ -43,11 +48,21 @@ public class Grid {
         _position = position;
     }
 
+    public void set_parent(int parentIndex){
+        _parent = parentIndex;
+    }
+
+    public void set_Fnum(int F){
+        _Fnum = F;
+    }
+
     public void set_type(String type){
         if((_type.equals("o") || _type.equals("O")) && type.equals("-")){
             _type = type;
         }
     }
+
+    public void set_containFood(boolean contain){_containFood = contain;}
 
     public void addHasNeighbor(int num,boolean has){
         _hasNeighbors[num] = has;
@@ -72,11 +87,21 @@ public class Grid {
 
     public int get_neighborNum() {return _neighborNum;}
 
+    public int[] get_neighbors(){
+        return _neighbors;
+    }
+
     public boolean[] get_hasNeighbors() {return _hasNeighbors;}
 
     public boolean get_containFood(){return _containFood;}
 
-    public void set_containFood(boolean contain){_containFood = contain;}
+    public int get_parent(){
+        return _parent;
+    }
+
+    public int get_Fnum(){
+        return _Fnum;
+    }
 
     public String toString(){
         String s = _index + " " + _type + " " + "Neighbor: ";

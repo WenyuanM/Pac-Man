@@ -1,17 +1,13 @@
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Random;
 
-/**
- * to store all the characters = PAC MAN + GHOSTS
- */
 public class Game_Character {
     private Ghost[] _normalGhosts;
     private Ghost[] _smartGhosts;
     private PacMan _pacMan;
     private Map _map;
-
     // ============================= Constructor ========================
-
     public Game_Character(Map map){
         _map = map;
         _pacMan = new PacMan(generateStartPos(Constants.PACMAN_GRID_ROW,Constants.PACMAN_GRID_COL),new Coordinate(0,0),
@@ -107,6 +103,30 @@ public class Game_Character {
         return findMatchingCode(i);
     }
 
+    private int pathfindingCode(int startIndex,int endIndex){
+        if(startIndex == endIndex){
+            return -1;
+        }
+        Pathfinding pathfinding = new Pathfinding(_map);
+        ArrayList<Grid> path = pathfinding.findShortestPath(startIndex,endIndex);
+        Grid nextGrid = path.get(1);
+        int nextIndex = nextGrid.get_index();
+        int i = 0;
+        if(startIndex == nextIndex - 1 || (startIndex == _map.get_mapCol() && nextIndex == 0)){
+            i = 3;
+        }
+        else if(startIndex == nextIndex + 1 || (startIndex == 0 && nextIndex == _map.get_mapCol())){
+            i = 2;
+        }
+        else if(startIndex == nextIndex + _map.get_mapCol()){
+            i = 0;
+        }
+        else if(startIndex == nextIndex - _map.get_mapCol()){
+            i = 1;
+        }
+        return findMatchingCode(i);
+    }
+
     private int findMatchingCode(int i){
         switch(i){
             case 0: // up
@@ -138,25 +158,31 @@ public class Game_Character {
         int size = _normalGhosts.length;
         int code = -1;
         for(int i=0;i<size;i++){
-            System.out.println("Ghost " + i + ") ");
-            char movingDirection = _normalGhosts[i].get_movingDirection();
-            System.out.println("Moving direction: " + movingDirection);
-            int currentRow = _normalGhosts[i].get_row();
-            int currentCol = _normalGhosts[i].get_col();
-            System.out.println("Row: " + currentRow + ", Col: " + currentCol);
-            if(checkWhetherGenerateRandomDirection(_normalGhosts[i])){
-                System.out.println("Random Direction");
-                boolean[] hasNeighbor = _map.get_grid(_normalGhosts[i].get_row(),_normalGhosts[i].get_col()).get_hasNeighbors();
-                code = randomDirectionGenerate(movingDirection, hasNeighbor);
-                System.out.println("The new code: " + code);
+            if(_normalGhosts[i].get_row() == Constants.GHOST_GRID_ROW && _normalGhosts[i].get_col() == Constants.GHOST_GRID_COL){
+                // at the ghost starting point
+                _normalGhosts[i].set_die(false);
             }
-            else if(_map.get_grid(_normalGhosts[i].get_row(),_normalGhosts[i].get_col()).get_neighborNum() == 2
-                    && !((_normalGhosts[i].get_row() == _normalGhosts[i].get_previousRow())
-                    && (_normalGhosts[i].get_previousCol() == _normalGhosts[i].get_col()))) {
-                System.out.println("Choose the other way");
-                boolean[] hasNeighbor = _map.get_grid(_normalGhosts[i].get_row(), _normalGhosts[i].get_col()).get_hasNeighbors();
-                code = findTheOtherWay(hasNeighbor,movingDirection);
-                System.out.println("The new code: " + code);
+            if(_normalGhosts[i].get_die()){
+                if(checkWhetherGenerateRandomDirection(_normalGhosts[i]) ||
+                        (_map.get_grid(_normalGhosts[i].get_row(),_normalGhosts[i].get_col()).get_neighborNum() == 2
+                                && !((_normalGhosts[i].get_row() == _normalGhosts[i].get_previousRow())
+                                && (_normalGhosts[i].get_previousCol() == _normalGhosts[i].get_col())))) {
+                    code = pathfindingCode(_normalGhosts[i].get_row() * _map.get_mapCol() + _normalGhosts[i].get_col(),
+                            Constants.GHOST_GRID_ROW * _map.get_mapCol() + Constants.GHOST_GRID_COL);
+                }
+            }
+            else{
+                char movingDirection = _normalGhosts[i].get_movingDirection();
+                if(checkWhetherGenerateRandomDirection(_normalGhosts[i])){
+                    boolean[] hasNeighbor = _map.get_grid(_normalGhosts[i].get_row(),_normalGhosts[i].get_col()).get_hasNeighbors();
+                    code = randomDirectionGenerate(movingDirection, hasNeighbor);
+                }
+                else if(_map.get_grid(_normalGhosts[i].get_row(),_normalGhosts[i].get_col()).get_neighborNum() == 2
+                        && !((_normalGhosts[i].get_row() == _normalGhosts[i].get_previousRow())
+                        && (_normalGhosts[i].get_previousCol() == _normalGhosts[i].get_col()))) {
+                    boolean[] hasNeighbor = _map.get_grid(_normalGhosts[i].get_row(), _normalGhosts[i].get_col()).get_hasNeighbors();
+                    code = findTheOtherWay(hasNeighbor,movingDirection);
+                }
             }
             Coordinate newPos = _normalGhosts[i].ifUpdate(code);
             int index = _map.findGridIndex(newPos,_normalGhosts[i].get_row(),_normalGhosts[i].get_col());
@@ -179,7 +205,68 @@ public class Game_Character {
             }
             code = -1;
         }
-        System.out.println("==================");
+    }
+
+    public void update_SmartGhosts(boolean gameMode){
+        int size = _smartGhosts.length;
+        int code = -1;
+        for(int i=0;i<size;i++){
+            if(_smartGhosts[i].get_row() == Constants.GHOST_GRID_ROW && _smartGhosts[i].get_col() == Constants.GHOST_GRID_COL){
+                // at the ghost starting point
+                _smartGhosts[i].set_die(false);
+            }
+            if(_smartGhosts[i].get_die()){
+                if(checkWhetherGenerateRandomDirection(_smartGhosts[i]) ||
+                        (_map.get_grid(_smartGhosts[i].get_row(),_smartGhosts[i].get_col()).get_neighborNum() == 2
+                                && !((_smartGhosts[i].get_row() == _smartGhosts[i].get_previousRow())
+                                && (_smartGhosts[i].get_previousCol() == _smartGhosts[i].get_col())))) {
+                    code = pathfindingCode(_smartGhosts[i].get_row() * _map.get_mapCol() + _smartGhosts[i].get_col(),
+                            Constants.GHOST_GRID_ROW * _map.get_mapCol() + Constants.GHOST_GRID_COL);
+                }
+            }
+            else if(gameMode){
+                if(checkWhetherGenerateRandomDirection(_smartGhosts[i]) ||
+                        (_map.get_grid(_smartGhosts[i].get_row(),_smartGhosts[i].get_col()).get_neighborNum() == 2
+                                && !((_smartGhosts[i].get_row() == _smartGhosts[i].get_previousRow())
+                                && (_smartGhosts[i].get_previousCol() == _smartGhosts[i].get_col())))) {
+                    code = pathfindingCode(_smartGhosts[i].get_row() * _map.get_mapCol() + _smartGhosts[i].get_col(),
+                            _pacMan.get_row() * _map.get_mapCol() + _pacMan.get_col());
+                }
+            }
+            else{
+                char movingDirection = _smartGhosts[i].get_movingDirection();
+                if(checkWhetherGenerateRandomDirection(_smartGhosts[i])){
+                    boolean[] hasNeighbor = _map.get_grid(_smartGhosts[i].get_row(),_smartGhosts[i].get_col()).get_hasNeighbors();
+                    code = randomDirectionGenerate(movingDirection, hasNeighbor);
+                }
+                else if(_map.get_grid(_smartGhosts[i].get_row(),_smartGhosts[i].get_col()).get_neighborNum() == 2
+                        && !((_smartGhosts[i].get_row() == _smartGhosts[i].get_previousRow())
+                        && (_smartGhosts[i].get_previousCol() == _smartGhosts[i].get_col()))) {
+                    boolean[] hasNeighbor = _map.get_grid(_smartGhosts[i].get_row(), _smartGhosts[i].get_col()).get_hasNeighbors();
+                    code = findTheOtherWay(hasNeighbor,movingDirection);
+                }
+            }
+            Coordinate newPos = _smartGhosts[i].ifUpdate(code);
+            int index = _map.findGridIndex(newPos,_smartGhosts[i].get_row(),_smartGhosts[i].get_col());
+            int row = index / _map.get_mapCol();
+            int col = index % _map.get_mapCol();
+            char newMovingDirection = _smartGhosts[i].get_movingDirection();
+            if(!(row == Constants.TRANSITION_ROW && col == Constants.TRANSITION_LEFT_COL && newMovingDirection == 'L') &&
+                    !(row == Constants.TRANSITION_ROW && col == Constants.TRANSITION_RIGHT_COL && newMovingDirection == 'R')){
+                if(_map.updateValid(newPos,row,col)){
+                    Coordinate gridLeftTop = _map.get_grid(row,col).get_position();
+                    Coordinate gridSize = _map.get_grid(row,col).get_size();
+                    Coordinate gridCenter = new Coordinate(gridLeftTop.getX() + gridSize.getX() / 2,
+                            gridLeftTop.getY() + gridSize.getY() / 2);
+                    newPos = _smartGhosts[i].adjustPos(newPos,gridCenter);
+                    _smartGhosts[i].update(newPos,row,col);
+                }
+            }
+            else{
+                _smartGhosts[i].updateTransition(col,_map.get_mapCol());
+            }
+            code = -1;
+        }
     }
 
     public int update_PacMan(int code){
@@ -236,9 +323,8 @@ public class Game_Character {
         }
         size = _smartGhosts.length;
         for(int i=0;i<size;i++){
-            if(_pacMan.checkCollide(_normalGhosts[i])){
-                _normalGhosts[i].set_die(true);
-                _pacMan.set_die(true);
+            if(_pacMan.checkCollide(_smartGhosts[i])){
+                _smartGhosts[i].set_die(true);
                 return true;
             }
         }

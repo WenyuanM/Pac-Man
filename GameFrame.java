@@ -19,7 +19,7 @@ public class GameFrame implements MouseMotionListener,KeyListener{
     private Map _map;
     private Game_Character _characters;
     private int _gamePoint;
-    Date _modeTime;
+    private Date _modeTime;
     private SimpleDateFormat _dateFormat;
     private SimpleDateFormat _timeFormat;
     private boolean _gameMode;  // T = Ghosts eat Pac Man || F = Pac Man eats Ghosts
@@ -29,7 +29,8 @@ public class GameFrame implements MouseMotionListener,KeyListener{
         _gamePoint = 0;
         _gameMode = true;
         _map = map;
-        _characters = new Game_Character(_map,4,0);
+
+        _characters = new Game_Character(_map,3,1);
         _offImg = new BufferedImage(Constants.GAMEFRAME_FRAME_WIDTH, Constants.GAMEFRAME_FRAME_HEIGHT,BufferedImage.TYPE_INT_RGB);
         drawOffImg();
         _mapComponent = new MapComponent();
@@ -78,6 +79,11 @@ public class GameFrame implements MouseMotionListener,KeyListener{
             shape.fillRect((int)leftTop.getX() + Constants.DRAWING_ADJUST,(int)leftTop.getY() + Constants.DRAWING_ADJUST,
                     (int)size.getX() + Constants.DRAWING_ADJUST,(int)size.getY() + Constants.DRAWING_ADJUST);
         }
+        else if(type.equals("x")){
+            shape.setColor(Color.ORANGE);
+            shape.fillRect((int)leftTop.getX() + Constants.DRAWING_ADJUST,(int)leftTop.getY() + Constants.DRAWING_ADJUST,
+                    (int)size.getX() + Constants.DRAWING_ADJUST,(int)size.getY() + Constants.DRAWING_ADJUST);
+        }
         else{
             shape.setColor(Color.BLACK);
             shape.fillRect((int)leftTop.getX() + Constants.DRAWING_ADJUST,(int)leftTop.getY() + Constants.DRAWING_ADJUST,
@@ -106,8 +112,6 @@ public class GameFrame implements MouseMotionListener,KeyListener{
     public void keyPressed(KeyEvent e) {
         int code = e.getKeyCode();
         updatePacMan(code);
-//        _characters.update_NormalGhosts();
-//        _mapComponent.repaint();
     }
 
     @Override
@@ -134,6 +138,7 @@ public class GameFrame implements MouseMotionListener,KeyListener{
                 public void run() {
                     while(true){
                         _characters.update_NormalGhosts();
+                        _characters.update_SmartGhosts(_gameMode);
                         if(_gameMode){
                             if(_characters.checkPacManDies()){
                                 _characters.restartCharacters();
