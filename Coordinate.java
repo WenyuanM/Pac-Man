@@ -1,15 +1,15 @@
-/**
- * to use as point or speed
- */
+package HelpingClass;
+
+// Coordinate Class: to manage a point in a coordinate system (x,y)
 
 public class Coordinate {
     private double _x;
     private double _y;
 
-    // ========================= CONSTRUCTORS FOR THIS CLASS ============================
+    // ====================================== CONSTRUCTORS ======================================
 
     /**
-     * two dimensional constructor for Coordinate
+     * Constructor: to initialize the point with given x and y
      * @param x the value of x direction
      * @param y the value of y direction
      */
@@ -18,42 +18,63 @@ public class Coordinate {
         _y = y;
     }
 
-    // ========================= COMMON METHODS USED OUTSIDE THE CLASS ============================
+    // ==================================== PUBLIC METHODS ========================================
 
+    /**
+     * to find the distance between two points (this point and the input point)
+     * @param p2 the new input point
+     * @return the distance in DOUBLE type
+     */
     public double distance(Coordinate p2){
         double inside = Math.pow((_x - p2.getX()),2) + Math.pow((_y - p2.getY()),2);
         return Math.sqrt(inside);
     }
 
     /**
-     * to output the current coordinate with x, y and z
+     * to add two coordinates
+     * @param p2 the second coordinate
+     * @return the sum coordinate
      */
-    public void print(){
-        System.out.print("Coordinate: (" + _x + "," + _y + ")");
-    }
-
     public Coordinate add(Coordinate p2){
         return new Coordinate(_x + p2.getX(),_y + p2.getY());
     }
 
+    /**
+     * to subtract two coordinates
+     * @param p2 the second coordinate
+     * @return the result coordinate
+     */
     public Coordinate subtract(Coordinate p2){
         return new Coordinate(_x - p2.getX(),_y - p2.getY());
     }
 
+    /**
+     * to multiple the coordinate and the factor
+     * @param factor the number needed to be multipled
+     * @return the result coordinate
+     */
     public Coordinate multiple(double factor){
         return new Coordinate(_x * factor,_y * factor);
     }
 
+    /**
+     * to divide the coordinate and the factor
+     * @param factor the number needed to be divided
+     * @return the result coordinate
+     */
     public Coordinate divide(double factor){
         return new Coordinate(_x / factor,_y / factor);
     }
 
-
-    // ========================= ACCESSOR AND MUTATOR FOR PRIVATE VARIABLES ============================
-
+    /**
+     * to get the coordinate as a STRING type
+     * @return the info as String type
+     */
     public String toString(){
         return "(" + _x + "," + _y + ")";
     }
+
+    // ======================================= Mutator ========================================
 
     /**
      * to set the value of x, y, and z
@@ -75,19 +96,21 @@ public class Coordinate {
     }
 
     /**
-     * to get the value of x direction
-     * @return the value of x direction
-     */
-    public double getX(){
-        return _x;
-    }
-
-    /**
      * to set the value of y
      * @param y the value of y direction
      */
     public void setY(double y){
         _y = y;
+    }
+
+    // =========================================== Accessor =========================================
+
+    /**
+     * to get the value of x direction
+     * @return the value of x direction
+     */
+    public double getX(){
+        return _x;
     }
 
     /**

@@ -1,6 +1,12 @@
-/**
- * to store all the grids into an arrayList and sidebar
- */
+package Map;
+
+import Frame.SideBar;
+import HelpingClass.Constants;
+import HelpingClass.Coordinate;
+import HelpingClass.ReadFile;
+
+// Map class: to create the map and store all the useful information
+
 public class Map {
     private SideBar _sidebar;
     private Grid[][] _map;
@@ -9,16 +15,17 @@ public class Map {
     private int _mapSize;
 
     // ================================ Constructor ================================
+
     /**
-     * to initialize the map variables (SIDE BAR + GRIDS)
+     * Constructor: to initialize the map variables (SIDE BAR + GRIDS)
      */
     public Map(){
-//        _sidebar = new SideBar();
+        //_sidebar = new SideBar();
         generateGrids();
-        if(Constants.DEBUG) printMap();
     }
 
-    // =========================== Public Methods ============================
+    // =========================== PRIVATE METHODS ============================
+
     /**
      * to generate grids with proper position, slope, type
      * @return return true, if the process is successful; otherwise, return false
@@ -37,6 +44,9 @@ public class Map {
         return true;
     }
 
+    /**
+     * to generate the coordinates for all the grids
+     */
     private void generateCoordinates(){
         double windowWidth = (double) Constants.GAMEFRAME_FRAME_WIDTH;
         double windowHeight = (double) (Constants.GAMEFRAME_FRAME_HEIGHT - Constants.SIDEBAR_HEIGHT);
@@ -52,6 +62,9 @@ public class Map {
         }
     }
 
+    /**
+     * to generate the neighbors for all the grids
+     */
     private void generateNeighbor(){
         for(int i=0;i<_mapRow;i++){
             for(int j=0;j<_mapCol;j++){
@@ -60,6 +73,11 @@ public class Map {
         }
     }
 
+    /**
+     * to generate the neighbor for a single grid
+     * @param i the row number of the grid
+     * @param j the col number of the grid
+     */
     private void generateSingleGridNeighbor(int i,int j){
         if(i > 0){
             // up neighbor
@@ -91,18 +109,40 @@ public class Map {
         }
     }
 
+    /**
+     * to check whether the point is in the grid
+     * @param point the current point
+     * @param row the row of the checking grid
+     * @param col the col of the checking grid
+     * @return T if the point is inside the grid; otherwise, F
+     */
     private boolean insideThisGrid(Coordinate point,int row,int col){
         Coordinate leftTop = _map[row][col].get_position();
         Coordinate size = _map[row][col].get_size();
         Coordinate rightBottom = leftTop.add(size);
         point.subtract(new Coordinate(0,Constants.SIDEBAR_HEIGHT));
-        if((point.getX() >= leftTop.getX() && point.getX() <= rightBottom.getX()) &&
-                (point.getY() >= leftTop.getY() && point.getY() <= rightBottom.getY())){
-            return true;
-        }
-        return false;
+        return (point.getX() >= leftTop.getX() && point.getX() <= rightBottom.getX()) &&
+                (point.getY() >= leftTop.getY() && point.getY() <= rightBottom.getY());
     }
 
+//    private void printMap(){
+//        for(int i=0;i<_mapRow;i++){
+//            for(int j=0;j<_mapCol;j++){
+//                System.out.println(_map[i][j]);
+//            }
+//            System.out.println("=================================");
+//        }
+//    }
+
+    // =============================== PUBLIC METHODS =======================================
+
+    /**
+     * to find the index of the grid
+     * @param point the point
+     * @param row the current row of the grid
+     * @param col the current col of the grid
+     * @return the index of the grid
+     */
     public int findGridIndex(Coordinate point,int row,int col){
         if(insideThisGrid(point,row,col)){
             return row * _mapCol + col;
@@ -130,6 +170,12 @@ public class Map {
         return 0;
     }
 
+    /**
+     * to update whether the food is eaten or not
+     * @param row the row of the grid
+     * @param col the col of the grid
+     * @return if the eaten food is big, return 2; otherwise, return 1
+     */
     public int updateFood(int row,int col){
         int index = row * _mapCol + col;
         Grid grid = get_grid(index);
@@ -146,6 +192,13 @@ public class Map {
         return 0;
     }
 
+    /**
+     * to check whether the current position is valid for a character to stay
+     * @param position the character's position
+     * @param row the row of the inside grid
+     * @param col the col of the inside grid
+     * @return T if it is valid to stay; otherwise, F
+     */
     public boolean updateValid(Coordinate position,int row,int col){
         // character left top point
         Coordinate point = position.subtract(new Coordinate((double)(Constants.CHARACTER_IMAGE_SIZE/2),
@@ -183,44 +236,49 @@ public class Map {
         index = findGridIndex(point,row,col);
         newRow = index / _mapCol;
         newCol = index % _mapCol;
-        if(_map[newRow][newCol].get_type().equals("|")){
-            return false;
-        }
-        return true;
+        return !_map[newRow][newCol].get_type().equals("|");
     }
 
+    // ================================== ACCESSORS =========================================
+
+    /**
+     * to get the grid in the map
+     * @param index the grid index
+     * @return the grid
+     */
     public Grid get_grid(int index){
         int row = index / _mapCol;
         int col = index % _mapCol;
         return _map[row][col];
     }
 
+    /**
+     * to get the grid in the map
+     * @param row the row of the grid
+     * @param col the col of the grid
+     * @return the grid
+     */
     public Grid get_grid(int row,int col){
         return _map[row][col];
     }
 
+    /**
+     * to get the map size
+     * @return the total map size
+     */
     public int get_mapSize(){
         return _mapSize;
     }
 
+    /**
+     * to get the total row in the map
+     * @return the total row number
+     */
     public int get_mapRow() {return _mapRow;}
 
-    public int get_mapCol() {return _mapCol;}
-
-    public void printMap(){
-        for(int i=0;i<_mapRow;i++){
-            for(int j=0;j<_mapCol;j++){
-                System.out.println(_map[i][j]);
-            }
-            System.out.println("=================================");
-        }
-    }
-
     /**
-     * to update all the grid occupation
-     * @return return true, if the process is successful; otherwise, return false
+     * to get the total col in the map
+     * @return the total col number
      */
-    public boolean update(){
-        return true;
-    }
+    public int get_mapCol() {return _mapCol;}
 }

@@ -1,5 +1,12 @@
+package HelpingClass;
+
+// Constants Class: to store all the useful CONSTANTS variables in the whole project
+
 public final class Constants{
     public static final boolean DEBUG = false;
+
+    // =================== Account ========================
+    public static final int INPUT_MAX_LENGTH = 10;
 
     // ==================== GUI ==========================
     public static final int GAMEFRAME_FRAME_HEIGHT = 1300;
