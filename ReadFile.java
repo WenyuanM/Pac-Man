@@ -1,16 +1,24 @@
+package HelpingClass;
+
+import Account.Account;
+import Map.Grid;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-/**
- * Read Files and return all the necessary elements for further coding
- */
+// ReadFile class: a helping class to read information from files
 
 public class ReadFile {
+    // Private variables for readCharacterMapFile method
     private int _row;
     private int _col;
 
+    /**
+     * to read all the account information from file
+     * @param fileName the account file name
+     * @return an arrayList of account storing in the file
+     */
     public ArrayList<Account> readAccountFile(String fileName){
         ArrayList<Account> accountList = new ArrayList<>();
 
@@ -35,6 +43,11 @@ public class ReadFile {
         return accountList;
     }
 
+    /**
+     * to process the reading sentence and break down into account username and password
+     * @param sentence the reading sentence
+     * @return the created account
+     */
     public Account processLineToGetAccount(String sentence){
         Account account = new Account();
         String[] arrayString = sentence.split(" ");
@@ -48,6 +61,11 @@ public class ReadFile {
         return account;
     }
 
+    /**
+     * to read the full map information from the file
+     * @param fileName the reading filename
+     * @return the two dimension Grid array (the full map)
+     */
     public Grid[][] readCharacterMapFile(String fileName){
         Grid[][] twoDGridList = null;
 
@@ -77,6 +95,12 @@ public class ReadFile {
         return twoDGridList;
     }
 
+    /**
+     * to process the reading line to get a row of the map
+     * @param sentence the reading line
+     * @param startIndex the start index of the current row
+     * @return a Grid array with the current row
+     */
     public Grid[] processLineToGetRow(String sentence,int startIndex){
         Grid[] rowGrid = new Grid[_col];
         int length = sentence.length();
@@ -87,7 +111,15 @@ public class ReadFile {
         return rowGrid;
     }
 
+    /**
+     * get the total row number of the reading full map
+     * @return the total row number
+     */
     public int get_row(){return _row;}
 
+    /**
+     * get the total col number of the reading full map
+     * @return the total col number
+     */
     public int get_col(){return _col;}
 }

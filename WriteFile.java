@@ -1,14 +1,21 @@
+package HelpingClass;
+
+import Account.AccountList;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
-/**
- * Created by Nancy on 2017/5/24.
- */
+// WriteFile class: to write the information into the file
 
 public class WriteFile {
 
-    public boolean writeFile(String fileName,AccountList accountList){
+    /**
+     * to write the new registered account into the file
+     * @param fileName the writing file name
+     * @param accountList the current account list
+     * @return write successfully or not
+     */
+    public boolean writeFile(String fileName, AccountList accountList){
         try{
             File outputFile = new File(fileName);
             PrintWriter out = new PrintWriter(outputFile);

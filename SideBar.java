@@ -1,4 +1,4 @@
-import javafx.geometry.Side;
+package Frame;
 
 /**
  * to store all the info for the game

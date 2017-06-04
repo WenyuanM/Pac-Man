@@ -1,25 +1,29 @@
+package Account;
+
+import HelpingClass.ReadFile;
+import HelpingClass.Constants;
 import java.util.ArrayList;
 
-/**
- * to store a list of Account variables for log-in and register
- */
+// AccountList Class: to manage an AccountList with multiple Accounts (reading from a file)
+
 public class AccountList {
     private ArrayList<Account> _accountList;
 
-    // ======================== Constructor =====================
+    // ===================================== Constructor ====================================
+
     /**
-     * to initialize the accountList
+     * to initialize the accountList and get all the account information from reading file
      */
     public AccountList(){
         ReadFile readFile = new ReadFile();
         _accountList = readFile.readAccountFile(Constants.ACCOUNT_FILE_NAME);
     }
 
-    // ======================== Public Methods =========================
+    // =================================== Public Methods ====================================
 
     /**
      * to add a new account to the accountList
-     * @param newAccount
+     * @param newAccount the new account needs to be added into the AccountList
      */
     public void addAccount(Account newAccount){
         _accountList.add(newAccount);
@@ -40,6 +44,19 @@ public class AccountList {
         return false;
     }
 
+    /**
+     * to print the AccountList information
+     */
+    public void printAccountList(){
+        System.out.println(_accountList);
+    }
+
+    // ======================================= Accessor ===================================
+    /**
+     * to get the account based on input index
+     * @param index the index of the getting account
+     * @return the account in the ACCOUNT type
+     */
     public Account getAccount(int index){
         return _accountList.get(index);
     }
@@ -50,9 +67,5 @@ public class AccountList {
      */
     public int getNumAccount(){
         return _accountList.size();
-    }
-
-    public void printAccountList(){
-        System.out.println(_accountList);
     }
 }

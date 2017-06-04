@@ -1,14 +1,17 @@
-/**
- * to store log-in and register account information
- */
+package Account;
+
+// Account Class: to manage a single account
+
+import HelpingClass.Constants;
+
 public class Account {
-    final private int MAX_LENGTH = 10;
     private String _username;
     private String _password;
 
     //================================== Constructor ===================================
+
     /**
-     * to initialize the two private variable as empty string
+     * Constructor: initialize the private variables
      */
     public Account(){
         _username = "";
@@ -32,7 +35,7 @@ public class Account {
     }
 
     /**
-     * to check whether the log-in username and password are matching the existing account
+     * to check whether the log-in username and password are matching with this existing account
      * @param username the log-in username
      * @param password the log-in password
      * @return if the log-in information is matching the existing account, return true; otherwise, return false
@@ -61,28 +64,52 @@ public class Account {
     }
 
     /**
-     * to print out the username and password associated with this account
+     * to get the account information as a string type
      */
     public String toString(){
         return  _username + " " + _password;
     }
 
-    // ================================= Accessor ==================================
+    // ================================ Accessor ========================================
+
     /**
-     * to return the username
+     * to return the username as a string type
      */
     public String getUserName(){
         return _username;
     }
 
     /**
-     * to return the password
+     * to return the password as a string type
      */
     public String getPassword(){
         return _password;
     }
 
+    // ================================ Mutator =========================================
+
+    /**
+     * to set the username if the username is valid
+     * @param username the new username
+     */
+    public void set_username(String username){
+        if(newInputValid(username)){
+            _username = username;
+        }
+    }
+
+    /**
+     * to set the password if the password is valid
+     * @param password the new password
+     */
+    public void set_password(String password){
+        if(newInputValid(password)){
+            _password = password;
+        }
+    }
+
     // ================================= Private methods ========================================
+
     /**
      * to check whether the input username or password is valid
      * @param input the input username or password
@@ -90,7 +117,7 @@ public class Account {
      */
     private boolean newInputValid(String input){
         // the maximum length is 10 with any input characters
-        if(input.length() < 1 || input.length() > MAX_LENGTH){
+        if(input.length() < 1 || input.length() > Constants.INPUT_MAX_LENGTH){
             return false;
         }
         return true;

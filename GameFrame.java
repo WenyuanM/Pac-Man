@@ -1,3 +1,9 @@
+package Frame;
+
+import Character.Game_Character;
+import Map.*;
+import HelpingClass.Constants;
+import HelpingClass.Coordinate;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -9,9 +15,9 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+// GameFrame class: implements MouseMotionListener and KeyListener
 
 public class GameFrame implements MouseMotionListener,KeyListener{
-    private JFrame _gameFrame;
     private JPanel _insidePanel;
     private JComponent _mapComponent;
     private BufferedImage _offImg;
@@ -20,12 +26,16 @@ public class GameFrame implements MouseMotionListener,KeyListener{
     private Game_Character _characters;
     private int _gamePoint;
     private Date _modeTime;
-    private SimpleDateFormat _dateFormat;
-    private SimpleDateFormat _timeFormat;
     private boolean _gameMode;  // T = Ghosts eat Pac Man || F = Pac Man eats Ghosts
 
+    // ================================ CONSTRUCTOR ===============================================
+
+    /**
+     * to create the game frame
+     * @param map the generated map
+     */
     public GameFrame(Map map){
-        _gameFrame = new JFrame();
+        JFrame _gameFrame = new JFrame();
         _gamePoint = 0;
         _gameMode = true;
         _map = map;
@@ -36,8 +46,8 @@ public class GameFrame implements MouseMotionListener,KeyListener{
         _mapComponent = new MapComponent();
         createInsidePanel();
 
-        _timeFormat = new SimpleDateFormat("h:mm a");
-        _dateFormat = new SimpleDateFormat("EEE,d MMM yyyy");
+        SimpleDateFormat _timeFormat = new SimpleDateFormat("h:mm a");
+        SimpleDateFormat _dateFormat = new SimpleDateFormat("EEE,d MMM yyyy");
 
         _gameFrame.addMouseMotionListener(this);
         _gameFrame.addKeyListener(this);
@@ -50,6 +60,11 @@ public class GameFrame implements MouseMotionListener,KeyListener{
         _gameFrame.setVisible(true);
     }
 
+    // =================================== PRIVATE METHODS ===================================
+
+    /**
+     * to create the inside panel of the frame
+     */
     private void createInsidePanel(){
         _insidePanel = new JPanel();
         _insidePanel.setLayout(new BorderLayout());
@@ -57,11 +72,18 @@ public class GameFrame implements MouseMotionListener,KeyListener{
         _insidePanel.add(_mapComponent,BorderLayout.CENTER);
     }
 
+    /**
+     * to draw the off image of the map
+     */
     private void drawOffImg(){
         Graphics offShape = _offImg.createGraphics();
         drawMap(offShape);
     }
 
+    /**
+     * to draw all the grid in the map to the off image
+     * @param shape the off image Graphics object
+     */
     private void drawMap(Graphics shape){
         int mapSize = _map.get_mapSize();
         for(int i=0;i<mapSize;i++){
@@ -73,21 +95,50 @@ public class GameFrame implements MouseMotionListener,KeyListener{
         }
     }
 
+    /**
+     * to draw the single grid in the map onto the off image
+     * @param shape the off image Graphics object
+     * @param leftTop the left top position of the grid
+     * @param size the size of the grid
+     * @param type the type of the grid
+     */
     private void drawSingleGrid(Graphics shape,Coordinate leftTop,Coordinate size,String type){
-        if(type.equals("|")){
-            shape.setColor(Color.BLUE);
-            shape.fillRect((int)leftTop.getX() + Constants.DRAWING_ADJUST,(int)leftTop.getY() + Constants.DRAWING_ADJUST,
-                    (int)size.getX() + Constants.DRAWING_ADJUST,(int)size.getY() + Constants.DRAWING_ADJUST);
+        switch (type) {
+            // if the grid is a block
+            case "|":
+                shape.setColor(Color.BLUE);
+                shape.fillRect((int) leftTop.getX() + Constants.DRAWING_ADJUST, (int) leftTop.getY() + Constants.DRAWING_ADJUST,
+                        (int) size.getX() + Constants.DRAWING_ADJUST, (int) size.getY() + Constants.DRAWING_ADJUST);
+                break;
+            // if the grid is a transition grid
+            case "x":
+                shape.setColor(Color.ORANGE);
+                shape.fillRect((int) leftTop.getX() + Constants.DRAWING_ADJUST, (int) leftTop.getY() + Constants.DRAWING_ADJUST,
+                        (int) size.getX() + Constants.DRAWING_ADJUST, (int) size.getY() + Constants.DRAWING_ADJUST);
+                break;
+            // if the grid is a road
+            default:
+                shape.setColor(Color.BLACK);
+                shape.fillRect((int) leftTop.getX() + Constants.DRAWING_ADJUST, (int) leftTop.getY() + Constants.DRAWING_ADJUST,
+                        (int) size.getX() + Constants.DRAWING_ADJUST, (int) size.getY() + Constants.DRAWING_ADJUST);
+                break;
         }
-        else if(type.equals("x")){
-            shape.setColor(Color.ORANGE);
-            shape.fillRect((int)leftTop.getX() + Constants.DRAWING_ADJUST,(int)leftTop.getY() + Constants.DRAWING_ADJUST,
-                    (int)size.getX() + Constants.DRAWING_ADJUST,(int)size.getY() + Constants.DRAWING_ADJUST);
-        }
-        else{
-            shape.setColor(Color.BLACK);
-            shape.fillRect((int)leftTop.getX() + Constants.DRAWING_ADJUST,(int)leftTop.getY() + Constants.DRAWING_ADJUST,
-                    (int)size.getX() + Constants.DRAWING_ADJUST,(int)size.getY() + Constants.DRAWING_ADJUST);
+    }
+
+
+    /**
+     * to update the pac man based on the given moving direciton
+     * @param code the number indicates the moving direction of the pac man
+     */
+    private void updatePacMan(int code){
+        int earnPoint = _characters.update_PacMan(code);
+        _gamePoint += earnPoint;
+        if(earnPoint >= 2){
+            // eat the big dot
+            _gameMode = false;
+            Calendar currentCalendar = Calendar.getInstance();
+            _modeTime = currentCalendar.getTime();
+
         }
     }
 
@@ -119,20 +170,9 @@ public class GameFrame implements MouseMotionListener,KeyListener{
         // LEAVE BLANK
     }
 
-    private void updatePacMan(int code){
-        int earnPoint = _characters.update_PacMan(code);
-        _gamePoint += earnPoint;
-        if(earnPoint >= 2){
-            // eat the big dot
-            _gameMode = false;
-            Calendar currentCalendar = Calendar.getInstance();
-            _modeTime = currentCalendar.getTime();
-
-        }
-    }
-
+    // =================================== INNER CLASS ========================================
     private class MapComponent extends JComponent{
-        public MapComponent(){
+        MapComponent(){
             Thread animationThread = new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -145,8 +185,9 @@ public class GameFrame implements MouseMotionListener,KeyListener{
                             }
                         }
                         else{
-                            if(_characters.checkGhostsDies()){
-                                _gamePoint += 100;
+                            int number = _characters.checkGhostsDies();
+                            if(number != 0){
+                                _gamePoint += (number * 100);
                             }
                             Calendar currentCalendar = Calendar.getInstance();
                             Date time = currentCalendar.getTime();
@@ -158,7 +199,7 @@ public class GameFrame implements MouseMotionListener,KeyListener{
                         try{
                             Thread.sleep(50);
                         }
-                        catch(Exception exception){}
+                        catch(Exception ignored){}
                     }
                 }
             });

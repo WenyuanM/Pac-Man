@@ -1,3 +1,7 @@
+package Frame;
+
+import Account.*;
+import HelpingClass.Constants;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -5,9 +9,8 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-/**
- * Created by Nancy on 2017/5/23.
- */
+// SignUpFrame class: to create a sign up frame
+
 public class SignUpFrame {
     private JFrame _signUpFrame;
     private LogInFrame _loginFrame;
@@ -24,7 +27,14 @@ public class SignUpFrame {
 
     private AccountList _accounts;
 
-    public SignUpFrame(AccountList accountList, LogInFrame loginFrame){
+    // ================================== CONSTRUCTOR ========================================
+
+    /**
+     * to create the sign up frame
+     * @param accountList the generated account list and the created logIn frame
+     * @param loginFrame the created LogIn frame
+     */
+    SignUpFrame(AccountList accountList, LogInFrame loginFrame){
         _accounts = accountList;
         _loginFrame = loginFrame;
         _signUpFrame = new JFrame();
@@ -42,11 +52,19 @@ public class SignUpFrame {
         _signUpFrame.setVisible(true);
     }
 
-    public void createBackground(){
+    // =============================== PRIVATE METHODS =========================================
+
+    /**
+     * to create the ContentPanel of the frame
+     */
+    private void createBackground(){
         _signUpFrame.add(new ContentPanel());
     }
 
-    public void createLabelAndField(){
+    /**
+     * to create all the labels and fields in the frame
+     */
+    private void createLabelAndField(){
         _usernameLabel = new JLabel("Username");
         _usernameLabel.setForeground(Color.WHITE);
         _usernameLabel.setFont(_font);
@@ -76,14 +94,20 @@ public class SignUpFrame {
         _pbProgress.setPreferredSize(new Dimension(500,30));
     }
 
-    public void createButton(){
+    /**
+     * to create the buttons in the frame
+     */
+    private void createButton(){
         ActionListener registerListener = new RegisterButtonListener();
         _registerButton = new JButton("Sign Up");
         _registerButton.setFont(_font);
         _registerButton.addActionListener(registerListener);
     }
 
-    public void createPanels(){
+    /**
+     * to create the panels to organize all the elements in the frame
+     */
+    private void createPanels(){
         JPanel infoPanel = new JPanel();
         infoPanel.add(_infoLabel);
         infoPanel.setBackground(new Color(0,0,0,255));
@@ -127,7 +151,16 @@ public class SignUpFrame {
         _signUpFrame.add(labelAndFieldPanel,BorderLayout.SOUTH);
     }
 
-    public AccountList getAccountList() {return _accounts;}
+    // ========================== PACKAGE PRIVATE METHODS =================================
+
+    /**
+     * to get the current accountList
+     * @return the current accountList
+     */
+    AccountList getAccountList() {return _accounts;}
+
+
+    // =================================== INNER CLASSES ==================================
 
     class RegisterButtonListener implements ActionListener{
 

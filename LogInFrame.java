@@ -1,3 +1,8 @@
+package Frame;
+
+import Account.AccountList;
+import HelpingClass.Constants;
+import HelpingClass.WriteFile;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -5,7 +10,10 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+// LogInFrame class: make a Log in frame connecting with Sign up Frame
+
 public class LogInFrame {
+    // ===================================== PRIVATE VARIABLES =================================
     private JFrame _logInFrame;
     private SignUpFrame _signUpFrame;
     private JLabel _infoLabel;
@@ -21,11 +29,16 @@ public class LogInFrame {
     private boolean _frameExist;
     private AccountList _accounts;
 
+    // ===================================== CONSTRUCTOR =======================================
+
+    /**
+     * Constructor: to create the log in frame
+     * @param accountList the account list getting from reading file
+     */
     public LogInFrame(AccountList accountList){
         _accounts = accountList;
         _frameExist = true;
         _font = new Font("TimesNewRoman",0,30);
-
         _logInFrame = new JFrame();
 
         createBackground();
@@ -40,11 +53,19 @@ public class LogInFrame {
         _logInFrame.setVisible(true);
     }
 
-    public void createBackground(){
+    // ============================ PRIVATE METHODS ==========================================
+
+    /**
+     * to create the ContentPanel of the frame
+     */
+    private void createBackground(){
         _logInFrame.add(new ContentPanel());
     }
 
-    public void createLabelAndField(){
+    /**
+     * to create all the labels and fields in the frame
+     */
+    private void createLabelAndField(){
         _usernameLabel = new JLabel("Username");
         _usernameLabel.setForeground(Color.WHITE);
         _usernameLabel.setFont(_font);
@@ -70,7 +91,10 @@ public class LogInFrame {
         _pbProgress.setPreferredSize(new Dimension(500,30));
     }
 
-    public void createButton(){
+    /**
+     * to create all the buttons in the frame
+     */
+    private void createButton(){
         ActionListener logInListener = new LogInButtonListener();
         _logInButton = new JButton("Log In");
         _logInButton.setFont(_font);
@@ -82,7 +106,10 @@ public class LogInFrame {
         _registerButton.addActionListener(registerListener);
     }
 
-    public void createPanels(){
+    /**
+     * to create the panels in the frame
+     */
+    private void createPanels(){
         JPanel infoPanel = new JPanel();
         infoPanel.add(_infoLabel);
         infoPanel.setBackground(new Color(0,0,0,255));
@@ -121,23 +148,44 @@ public class LogInFrame {
         _logInFrame.add(labelAndFieldPanel,BorderLayout.SOUTH);
     }
 
-    public void setUpSignUpFrame(){
+    /**
+     * to set up the SignUpFrame
+     */
+    private void setUpSignUpFrame(){
         _signUpFrame = new SignUpFrame(_accounts,this);
     }
 
-    public void updateAccountList() {
+    // =========================== PACKAGE PRIVATE METHODS ===================================
+
+    /**
+     * to update the AccountList once there is a new registered account
+     */
+    void updateAccountList() {
         _accounts = _signUpFrame.getAccountList();
         WriteFile writeFile = new WriteFile();
         writeFile.writeFile(Constants.ACCOUNT_FILE_NAME,_accounts);
     }
 
-    public void setFrameVisible(boolean visible) {
+    /**
+     * to set the frame visible or not
+     * @param visible a boolean to indicate the frame is visible or not
+     */
+    void setFrameVisible(boolean visible) {
         _logInFrame.setVisible(visible);
         if(Constants.DEBUG) System.out.println("Updated AccountList: ");
         if(Constants.DEBUG) _accounts.printAccountList();
     }
 
+    // =============================== PUBLIC METHODS ==========================================
+
+    /**
+     * to get whether the frame is still existing or not
+     * @return T if the frame exists; F if the frame doesn't exist anymore
+     */
     public boolean get_frameExist(){return _frameExist;}
+
+
+    // =============================== INNER CLASSES ===========================================
 
     class LogInButtonListener implements ActionListener{
 
