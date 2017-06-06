@@ -164,6 +164,10 @@ public class SignUpFrame {
 
     class RegisterButtonListener implements ActionListener{
 
+        /**
+         * when the register button is clicked, create the account
+         * @param e the ActionEvent
+         */
         @Override
         public void actionPerformed(ActionEvent e) {
             String username = _usernameField.getText();
@@ -213,6 +217,11 @@ public class SignUpFrame {
 
     class ProgressWorker extends SwingWorker<Object,Object>{
 
+        /**
+         * to run the process bar
+         * @return return null
+         * @throws Exception the process bar exception
+         */
         @Override
         protected Object doInBackground() throws Exception {
             int i = 0;
@@ -237,6 +246,9 @@ public class SignUpFrame {
     class ContentPanel extends JPanel{
         Image bgimage = null;
 
+        /**
+         * Constructor of ContentPanel: to create the ContentPanel
+         */
         ContentPanel(){
             MediaTracker mt = new MediaTracker(_signUpFrame);
             bgimage = Toolkit.getDefaultToolkit().getImage(Constants.SIGN_UP_WINDOW_BACKGROUND);
@@ -249,6 +261,10 @@ public class SignUpFrame {
             }
         }
 
+        /**
+         * to draw the off image of the map
+         * @param g the Graphics object
+         */
         protected void paintComponent(Graphics g){
             super.paintComponent(g);
             g.drawImage(bgimage,1,1,null);

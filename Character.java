@@ -2,6 +2,8 @@ package Character;
 
 import HelpingClass.Coordinate;
 import HelpingClass.Constants;
+import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -17,6 +19,7 @@ public class Character {
     private int _col;
     private int _previousRow;
     private int _previousCol;
+    private String _status;
 
     // =========================== PACKAGE-PRIVATE VARIABLES ===============================
     BufferedImage[] _images;
@@ -88,12 +91,19 @@ public class Character {
     void initialCharacter(Coordinate pos, Coordinate speed, int row, int col, char name){
         _type = name;
         _movingDirection = '-';
+        _status = "-";
         _position = pos;
         _speed = speed;
         _row = row;
         _col = col;
         _previousRow = row;
         _previousCol = col;
+        if(_type == 'S'){
+            _status = "Pathfinding";
+        }
+        else{
+            _status = "Moving";
+        }
         _die = false;
     }
 
@@ -146,7 +156,7 @@ public class Character {
      */
     void updateTransition(int col, int maxCol){
         if(col == Constants.TRANSITION_LEFT_COL){
-            _position.setX(Constants.GAMEFRAME_FRAME_WIDTH - Constants.CHARACTER_IMAGE_SIZE / 2);
+            _position.setX(Constants.GAMEFRAME_FRAME_WIDTH - Constants.SIDEBAR_WIDTH - Constants.CHARACTER_IMAGE_SIZE / 2);
             _col = maxCol - 1;
         }
         else{
@@ -198,13 +208,32 @@ public class Character {
     void set_die(boolean die){
         _die = die;
         _movingDirection = '-';
+        if(die){
+            _status = "Die. Go back to the starting position.";
+        }
+        else{
+            if(_type == 'S'){
+                _status = "Pathfinding.";
+            }
+            else{
+                _status = "Moving";
+            }
+        }
     }
 
     /**
      * to set the new type of the character
      * @param name the new type
      */
-    void set_type(char name) {_type = name;}
+    void set_type(char name) {
+        _type = name;
+        if(_type == 'S'){
+            _status = "Pathfinding";
+        }
+        else{
+            _status = "Moving";
+        }
+    }
 
     // ====================================== Mutator =========================================
 
@@ -261,6 +290,12 @@ public class Character {
      * @return the current moving direction
      */
     char get_movingDirection() {return _movingDirection;}
+
+    /**
+     * to get the status of the character
+     * @return the current status
+     */
+    String get_status(){return _status;}
 
     // =================================== Private Methods ===================================
 

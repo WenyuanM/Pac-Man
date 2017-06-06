@@ -7,6 +7,8 @@ import HelpingClass.Constants;
 public class Account {
     private String _username;
     private String _password;
+    private int _earnedPoint;
+    private String _time;
 
     //================================== Constructor ===================================
 
@@ -16,6 +18,8 @@ public class Account {
     public Account(){
         _username = "";
         _password = "";
+        _earnedPoint = 0;
+        _time = "0:0";
     }
 
     // ================================= Public Methods ===================================
@@ -29,6 +33,28 @@ public class Account {
         if(newInputValid(username) && newInputValid(password)){
             _username = username;
             _password = password;
+            _earnedPoint = 0;
+            _time = "0:0";
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * to
+     * to check whether the input username and password are valid, if they are valid, create a new account
+     * @param username the new username
+     * @param password the new password
+     * @param earnedPoint the earned point
+     * @param time the time
+     * @return if the account is created successfully, return true; otherwise, return false
+     */
+    public boolean createAccount(String username,String password,int earnedPoint,String time){
+        if(newInputValid(username) && newInputValid(password)){
+            _username = username;
+            _password = password;
+            _earnedPoint = earnedPoint;
+            _time = time;
             return true;
         }
         return false;
@@ -67,13 +93,82 @@ public class Account {
      * to get the account information as a string type
      */
     public String toString(){
-        return  _username + " " + _password;
+        return  _username + " " + _password + " " + _earnedPoint + " " + _time;
+    }
+
+    /**
+     * to get the display info on the game result panel
+     * @return the string of the game result info
+     */
+    public String rateDisplay(){
+        return "Username: " + _username + "\t" + "Earned Point: " + _earnedPoint + "\t" + "Time: " + _time;
+    }
+    /**
+     * to check whether this account is better than the account
+     * @param account the comparing account
+     * @return T if this is better than the comparing account; otherwise, return F
+     */
+    public boolean bigger(Account account){
+        if(_earnedPoint > account._earnedPoint){
+            return true;
+        }
+        else if(_earnedPoint == account._earnedPoint){
+            String[] times = _time.split(":");
+            int minute = Integer.parseInt(times[0]);
+            int second = Integer.parseInt(times[1]);
+            times = account.get_time().split(":");
+            int other_minute = Integer.parseInt(times[0]);
+            int other_second = Integer.parseInt(times[1]);
+            if(minute < other_minute){
+                return true;
+            }
+            else if(minute == other_minute){
+                if(second < other_second){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * to check whether the new record is better than the last record
+     * @param earnedPoint the new earned point
+     * @param time the new time
+     * @return T if updates; otherwise, return F
+     */
+    public boolean updateEarnedPointandTime(int earnedPoint,String time){
+        if(earnedPoint > _earnedPoint){
+            _earnedPoint = earnedPoint;
+            _time = time;
+            return true;
+        }
+        else if(earnedPoint == _earnedPoint){
+            String[] times = _time.split(":");
+            int minute = Integer.parseInt(times[0]);
+            int second = Integer.parseInt(times[1]);
+            times = time.split(":");
+            int other_minute = Integer.parseInt(times[0]);
+            int other_second = Integer.parseInt(times[1]);
+            if(minute > other_minute){
+                _time = time;
+                return true;
+            }
+            else if(minute == other_minute){
+                if(second > other_second){
+                    _time = time;
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     // ================================ Accessor ========================================
 
     /**
      * to return the username as a string type
+     * @return the username
      */
     public String getUserName(){
         return _username;
@@ -81,11 +176,17 @@ public class Account {
 
     /**
      * to return the password as a string type
+     * @return the password
      */
     public String getPassword(){
         return _password;
     }
 
+    /**
+     * to return the time string
+     * @return the time string
+     */
+    public String get_time() { return _time;}
     // ================================ Mutator =========================================
 
     /**

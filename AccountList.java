@@ -51,6 +51,48 @@ public class AccountList {
         System.out.println(_accountList);
     }
 
+    /**
+     * to sort the account lists based on their game result
+     */
+    public void sortAccountList(){
+        ArrayList<Account> sortedAccount = new ArrayList<>();
+        while(_accountList.size() != 0){
+            int index = maxAccount();
+            sortedAccount.add(_accountList.get(index));
+            _accountList.remove(index);
+        }
+        _accountList = sortedAccount;
+    }
+
+    /**
+     * to get the string of the whole account list
+     * @return the string of the whole account list
+     */
+    public String toString(){
+        String s = "";
+        for(Account account:_accountList){
+            s += account.rateDisplay() + "\n";
+        }
+        return s;
+    }
+
+    /**
+     * to get the best game result account's index
+     * @return the index of the best account
+     */
+    private int maxAccount(){
+        int index = 0;
+        Account maxAccount = _accountList.get(0);
+        int length = _accountList.size();
+        for(int i=1;i<length;i++){
+            if(_accountList.get(i).bigger(maxAccount)){
+                index = i;
+                maxAccount = _accountList.get(i);
+            }
+        }
+        return index;
+    }
+
     // ======================================= Accessor ===================================
     /**
      * to get the account based on input index
@@ -59,6 +101,20 @@ public class AccountList {
      */
     public Account getAccount(int index){
         return _accountList.get(index);
+    }
+
+    /**
+     * to get the account based on the user name
+     * @param username the user name
+     * @return the account
+     */
+    public Account getAccount(String username){
+        for(Account account:_accountList){
+            if(account.getUserName().equals(username)){
+                return account;
+            }
+        }
+        return null;
     }
 
     /**

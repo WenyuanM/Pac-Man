@@ -458,4 +458,40 @@ public class Game_Character {
             _smartGhosts[i].draw(shape,gameMode);
         }
     }
+
+    // ============================== ACCESSOR ===================================
+
+    /**
+     * to get the status of the character
+     * @param index the index of the character
+     * @return the status as a string
+     */
+    public String get_status(int index){
+        if(index == -1){
+            return _pacMan.get_status();
+        }
+        else if(index < _normalGhosts.length){
+            return _normalGhosts[index].get_status();
+        }
+        else{
+            return _smartGhosts[index - _normalGhosts.length].get_status();
+        }
+    }
+
+    /**
+     * to get the moving direction of the character
+     * @param index the index of the character
+     * @return the moving direction
+     */
+    public char get_movingDirection(int index){
+        if(index == -1){
+            return _pacMan.get_movingDirection();
+        }
+        else if(index < _normalGhosts.length){
+            return _normalGhosts[index].get_movingDirection();
+        }
+        else{
+            return _smartGhosts[index - _normalGhosts.length].get_movingDirection();
+        }
+    }
 }

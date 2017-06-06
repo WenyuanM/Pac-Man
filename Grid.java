@@ -23,6 +23,7 @@ public class Grid {
 
     /**
      * Constructor: to initialize the gird with type, size, and pos for 2D
+     * @param index the index of the grid
      * @param type the type of the grid T = road, F = block
      */
     public Grid(int index,String type){

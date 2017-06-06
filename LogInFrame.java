@@ -28,6 +28,7 @@ public class LogInFrame {
 
     private boolean _frameExist;
     private AccountList _accounts;
+    private String _username;
 
     // ===================================== CONSTRUCTOR =======================================
 
@@ -184,18 +185,27 @@ public class LogInFrame {
      */
     public boolean get_frameExist(){return _frameExist;}
 
+    /**
+     * to get the username
+     * @return the username
+     */
+    public String get_username(){ return _username;}
 
     // =============================== INNER CLASSES ===========================================
 
     class LogInButtonListener implements ActionListener{
 
+        /**
+         * when the log in button is pressed, check the input username and password to log in
+         * @param e the ActionEvent object
+         */
         @Override
         public void actionPerformed(ActionEvent e) {
-            String username = _usernameField.getText();
+            _username = _usernameField.getText();
             String password = String.valueOf(_passwordField.getPassword());
-            if(_accounts.logIn(username,password)){
+            if(_accounts.logIn(_username,password)){
                 // username and password are correct
-                _infoLabel.setText("Welcome back, " + username);
+                _infoLabel.setText("Welcome back, " + _username);
                 _logInButton.setEnabled(false);
                 _pbProgress.setStringPainted(true);
                 ProgressWorker pw = new ProgressWorker();
@@ -228,6 +238,10 @@ public class LogInFrame {
 
     class RegisterButtonListener implements ActionListener{
 
+        /**
+         * when the sign up button is pressed, to open a sign up frame
+         * @param e the ActionEvent object
+         */
         @Override
         public void actionPerformed(ActionEvent e) {
             _logInFrame.setVisible(false);
@@ -238,6 +252,11 @@ public class LogInFrame {
 
     class ProgressWorker extends SwingWorker<Object,Object>{
 
+        /**
+         * to run the process bar
+         * @return return null
+         * @throws Exception the process bar exception
+         */
         @Override
         protected Object doInBackground() throws Exception {
             int i = 0;
@@ -261,6 +280,9 @@ public class LogInFrame {
     class ContentPanel extends JPanel{
         Image bgimage = null;
 
+        /**
+         * Constructor of ContentPanel: to create the ContentPanel
+         */
         ContentPanel(){
             MediaTracker mt = new MediaTracker(_logInFrame);
             bgimage = Toolkit.getDefaultToolkit().getImage(Constants.LOG_IN_WINDOW_BACKGROUND);
@@ -273,6 +295,10 @@ public class LogInFrame {
             }
         }
 
+        /**
+         * to draw the off image of the map
+         * @param g the Graphics object
+         */
         protected void paintComponent(Graphics g){
             super.paintComponent(g);
             g.drawImage(bgimage,1,1,null);
