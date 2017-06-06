@@ -1,5 +1,11 @@
 package HelpingClass;
 
+/**
+ * Project: Pac Man Game (Final Project of CS 3B Java Course in Pasadena City College)
+ * Author: Wenyuan Ma
+ * Final Edit Date: June 6 2017
+ */
+
 // Coordinate Class: to manage a point in a coordinate system (x,y)
 
 public class Coordinate {
