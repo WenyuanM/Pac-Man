@@ -4,22 +4,26 @@ package HelpingClass;
 
 public final class Constants{
     public static final boolean DEBUG = false;
+    public static final boolean MULTITHREADING = false;
 
     // =================== Account ========================
     public static final int INPUT_MAX_LENGTH = 10;
 
     // ==================== GUI ==========================
     public static final int GAMEFRAME_FRAME_HEIGHT = 1300;
-    public static final int GAMEFRAME_FRAME_WIDTH = 1300;
+    public static final int GAMEFRAME_FRAME_WIDTH = 1800;
 
     public static final int SIDEBAR_HEIGHT = 50;
-    public static final int SIDEBAR_WIDTH = 2000;
+    public static final int SIDEBAR_WIDTH = 500;
 
     public static final int LOGINFRAME_FRAME_HEIGHT = 800;
     public static final int LOGINFRAME_FRAME_WIDTH = 1050;
 
     public static final int SIGNUPFRAME_FRAME_HEIGHT = 400;
     public static final int SIGNUPFRAME_FRAME_WIDTH = 1200;
+
+    public static final int GAMERESULTFRAME_FRAME_HEIGHT = 800;
+    public static final int GAMERESULTFRAME_FRAME_WIDTH = 1200;
 
     public static final int FIELD_WIDTH = 10;
 
@@ -30,7 +34,7 @@ public final class Constants{
 
     // ================== FILE NAMES ==========================
     public static final String ACCOUNT_FILE_NAME = "Accounts.txt";
-    public static final String MAP_FILE_NAME = "Map 1.txt";
+    public static final String MAP_FILE_NAME = "Map.txt";
 
     // ==================== FOR GRID CLASS ======================
     public static final int NEIGHBOR_NUM = 4;

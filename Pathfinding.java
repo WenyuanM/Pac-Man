@@ -30,7 +30,7 @@ public class Pathfinding {
      * to find the shortest path from startIndex to endIndex
      * @param startIndex the start index
      * @param endIndex the end index
-     * @return the path in ARRAYLIST<GRID> type
+     * @return the path
      */
     public ArrayList<Grid> findShortestPath(int startIndex,int endIndex){
         resetFValue();

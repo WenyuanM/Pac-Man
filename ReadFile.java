@@ -54,7 +54,10 @@ public class ReadFile {
 
         String username = arrayString[0];
         String password = arrayString[1];
-        if(!account.createAccount(username,password)){
+        int earnedPoint = Integer.parseInt(arrayString[2]);
+        String time = arrayString[3];
+
+        if(!account.createAccount(username,password,earnedPoint,time)){
             System.out.println("The Account is invalid!");
             System.out.println("username: " + username + ", password: " + password);
         }

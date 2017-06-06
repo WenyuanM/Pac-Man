@@ -1,6 +1,5 @@
 package Map;
 
-import Frame.SideBar;
 import HelpingClass.Constants;
 import HelpingClass.Coordinate;
 import HelpingClass.ReadFile;
@@ -8,11 +7,11 @@ import HelpingClass.ReadFile;
 // Map class: to create the map and store all the useful information
 
 public class Map {
-    private SideBar _sidebar;
     private Grid[][] _map;
     private int _mapRow;
     private int _mapCol;
     private int _mapSize;
+    private int _totalPoint;
 
     // ================================ Constructor ================================
 
@@ -20,8 +19,8 @@ public class Map {
      * Constructor: to initialize the map variables (SIDE BAR + GRIDS)
      */
     public Map(){
-        //_sidebar = new SideBar();
         generateGrids();
+        _totalPoint = findPoints();
     }
 
     // =========================== PRIVATE METHODS ============================
@@ -48,7 +47,7 @@ public class Map {
      * to generate the coordinates for all the grids
      */
     private void generateCoordinates(){
-        double windowWidth = (double) Constants.GAMEFRAME_FRAME_WIDTH;
+        double windowWidth = (double) (Constants.GAMEFRAME_FRAME_WIDTH - Constants.SIDEBAR_WIDTH);
         double windowHeight = (double) (Constants.GAMEFRAME_FRAME_HEIGHT - Constants.SIDEBAR_HEIGHT);
         double gridWidth = windowWidth / (double) _mapCol;
         double gridHeight = windowHeight / (double) _mapRow;
@@ -125,14 +124,24 @@ public class Map {
                 (point.getY() >= leftTop.getY() && point.getY() <= rightBottom.getY());
     }
 
-//    private void printMap(){
-//        for(int i=0;i<_mapRow;i++){
-//            for(int j=0;j<_mapCol;j++){
-//                System.out.println(_map[i][j]);
-//            }
-//            System.out.println("=================================");
-//        }
-//    }
+    /**
+     * to find the total points that can be earned from this map
+     * @return the total points
+     */
+    private int findPoints(){
+        int point = 0;
+        for(int i=0;i<_mapRow;i++){
+            for(int j=0;j<_mapCol;j++){
+                if(_map[i][j].get_type().equals(".")){
+                    point++;
+                }
+                else if(_map[i][j].get_type().equals("o")){
+                    point += 2;
+                }
+            }
+        }
+        return point;
+    }
 
     // =============================== PUBLIC METHODS =======================================
 
@@ -239,6 +248,31 @@ public class Map {
         return !_map[newRow][newCol].get_type().equals("|");
     }
 
+    /**
+     * to check whether there is any more food to eat
+     * @return T if there is more food; Otherwise, F
+     */
+    public boolean gameContinue(){
+        for(int i=0;i<_mapRow;i++){
+            for(int j=0;j<_mapCol;j++){
+                if(_map[i][j].get_containFood()){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * to set all the food to be eaten
+     */
+    public void endGame(){
+        for(int i=0;i<_mapRow;i++) {
+            for (int j = 0; j < _mapCol; j++) {
+                _map[i][j].set_containFood(false);
+            }
+        }
+    }
     // ================================== ACCESSORS =========================================
 
     /**
@@ -281,4 +315,10 @@ public class Map {
      * @return the total col number
      */
     public int get_mapCol() {return _mapCol;}
+
+    /**
+     * to get the total points that can be earned from this map
+     * @return the total points that can be earned from this map
+     */
+    public int get_totalPoint() { return _totalPoint;}
 }
