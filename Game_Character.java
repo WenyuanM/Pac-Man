@@ -1,5 +1,11 @@
 package Character;
 
+/**
+ * Project: Pac Man Game (Final Project of CS 3B Java Course in Pasadena City College)
+ * Author: Wenyuan Ma
+ * Final Edit Date: June 6 2017
+ */
+
 import HelpingClass.Coordinate;
 import HelpingClass.Constants;
 import HelpingClass.Pathfinding;

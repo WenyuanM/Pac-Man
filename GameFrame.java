@@ -1,5 +1,11 @@
 package Frame;
 
+/**
+ * Project: Pac Man Game (Final Project of CS 3B Java Course in Pasadena City College)
+ * Author: Wenyuan Ma
+ * Final Edit Date: June 6 2017
+ */
+
 import Character.Game_Character;
 import Map.*;
 import HelpingClass.Constants;
@@ -265,22 +271,22 @@ public class GameFrame implements KeyListener{
         _pacManInfo[2].setText("Moving Direction: " + _characters.get_movingDirection(-1));
         _pacManInfo[3].setText("Speed: " + Constants.PACMAN_SPEED);
 
-        _ghost1Info[0].setText("Pac Man: ");
+        _ghost1Info[0].setText("Ghost Red: ");
         _ghost1Info[1].setText("Status: " + _characters.get_status(0));
         _ghost1Info[2].setText("Moving Direction: " + _characters.get_movingDirection(0));
         _ghost1Info[3].setText("Speed: " + Constants.GHOST_SPEED);
 
-        _ghost2Info[0].setText("Pac Man: ");
+        _ghost2Info[0].setText("Ghost Pink: ");
         _ghost2Info[1].setText("Status: " + _characters.get_status(1));
         _ghost2Info[2].setText("Moving Direction: " + _characters.get_movingDirection(1));
         _ghost2Info[3].setText("Speed: " + Constants.GHOST_SPEED);
 
-        _ghost3Info[0].setText("Pac Man: ");
+        _ghost3Info[0].setText("Ghost Blue: ");
         _ghost3Info[1].setText("Status: " + _characters.get_status(2));
         _ghost3Info[2].setText("Moving Direction: " + _characters.get_movingDirection(2));
         _ghost3Info[3].setText("Speed: " + Constants.GHOST_SPEED);
 
-        _ghost4Info[0].setText("Pac Man: ");
+        _ghost4Info[0].setText("Ghost Orange: ");
         _ghost4Info[1].setText("Status: " + _characters.get_status(3));
         _ghost4Info[2].setText("Moving Direction: " + _characters.get_movingDirection(3));
         _ghost4Info[3].setText("Speed: " + Constants.GHOST_SPEED);
